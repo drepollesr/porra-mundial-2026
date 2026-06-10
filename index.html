@@ -67,14 +67,15 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
 <script>
 const ADMIN_PASSWORD='mundial2026';
 // 1) Crea un proyecto en Firebase. 2) Copia aquí tu configuración web. 3) Guarda este archivo como index.html.
-const FIREBASE_CONFIG={
-  apiKey:'PEGA_AQUI_TU_API_KEY',
-  authDomain:'PEGA_AQUI.firebaseapp.com',
-  projectId:'PEGA_AQUI_TU_PROJECT_ID',
-  storageBucket:'PEGA_AQUI.appspot.com',
-  messagingSenderId:'PEGA_AQUI',
-  appId:'PEGA_AQUI'
-};
+const firebaseConfig = {
+    apiKey: "AIzaSyCuhvCcKKRQPQeGkLQ8zLjqSmoKUB4ZLOY",
+    authDomain: "porra-mundial-2026-pumpum.firebaseapp.com",
+    projectId: "porra-mundial-2026-pumpum",
+    storageBucket: "porra-mundial-2026-pumpum.firebasestorage.app",
+    messagingSenderId: "914705012493",
+    appId: "1:914705012493:web:7163047bed60ca3b1d8244",
+    measurementId: "G-38KYPMGHYB"
+  };
 let db=null;
 function onlineReady(){return !!db}
 function setOnlineStatus(msg){let el=document.getElementById('onlineStatus');if(el)el.textContent='Estado online: '+msg}
