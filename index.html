@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - Online Firebase v4.2</title>
+<title>Porra Mundial 2026 - Online Firebase v4.3</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -14,13 +14,14 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.2 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.3 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
     <button class="tab" data-tab="jugador">Modo jugador</button>
     <button class="tab" data-tab="admin">Modo administrador</button>
     <button class="tab" data-tab="ranking">Ranking</button>
+    <button class="tab" data-tab="resultados">Resultados</button>
     <button class="tab" data-tab="porras">Porras de todos</button>
     <button class="tab" data-tab="reglas">Reglas</button>
   </div>
@@ -60,10 +61,11 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
   </section>
 
   <section id="ranking" class="section"><div class="card"><h3>Ranking automático</h3><p class="muted">Todos empiezan con 0 puntos. Solo se suman puntos de partidos cuando el administrador mete resultados reales ya jugados.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar ranking online</button><div id="rankingBox"></div></div></section>
+  <section id="resultados" class="section"><div class="card"><h3>Resultados y porras por partido</h3><p class="muted">Aquí se ven los resultados reales que va guardando el administrador y, partido a partido, lo que había pronosticado cada participante y los puntos obtenidos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar resultados online</button><div id="resultadosBox"></div></div></section>
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Posición exacta en grupo</td><td>3</td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>1</td></tr><tr><td>Equipo en dieciseisavos</td><td>2</td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Ya no necesitas que cada jugador elija manualmente 1º, 2º, 3º y 4º.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v4.2 final · Cierre 11/06 21:00 · Clave admin por defecto: mundial2026</div>
+<div class="footer">Porra Mundial 2026 · v4.3 final · Cierre 11/06 21:00 · Clave admin por defecto: mundial2026</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -104,7 +106,7 @@ async function loadOnlineData(showAlert=true){
     const adminDoc=await db.collection('estado').doc('admin').get();
     if(adminDoc.exists){let data=adminDoc.data();if(data.real)st.real=data.real}
     localStorage.setItem('porra_admin',JSON.stringify(st));
-    renderAdmin();renderRanking();renderPorras();
+    renderAdmin();renderRanking();renderResultados();renderPorras();
     if(showAlert)alert('Datos online actualizados.');
   }catch(e){console.error(e);alert('No se pudieron cargar los datos online: '+e.message)}
 }
@@ -160,7 +162,7 @@ const THIRD_PLACE_TABLE={"CDFHIJKL":["C","J","I","D","H","F","L","K"],"CDFGIJKL"
 
 let matches=[];Object.entries(groups).forEach(([g,arr])=>pairings.forEach((p,i)=>matches.push({id:`${g}${i+1}`,group:g,home:arr[p[0]],away:arr[p[1]]})));
 function $(id){return document.getElementById(id)}
-function go(id){document.querySelectorAll('.tab[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));if(id==='ranking')renderRanking();if(id==='porras')renderPorras();renderAllDynamic()}
+function go(id){document.querySelectorAll('.tab[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));if(id==='ranking')renderRanking();if(id==='resultados')renderResultados();if(id==='porras')renderPorras();renderAllDynamic()}
 function isAdminUnlocked(){return sessionStorage.getItem('porra_admin_unlocked')==='1'}
 function askAdminPassword(){let pass=prompt('Clave de administrador');if(pass===ADMIN_PASSWORD){sessionStorage.setItem('porra_admin_unlocked','1');go('admin')}else if(pass!==null){alert('Clave incorrecta')}}
 function lockAdmin(){sessionStorage.removeItem('porra_admin_unlocked');go('inicio')}
@@ -258,7 +260,30 @@ function scorePlayer(p,real){
   extras.forEach(([key,,pts])=>{let a=normText(p.pred?.extras?.[key]||''),b=normText(real.extras?.[key]||'');if(!a||!b)return;if(key==='mas_goleado_primera_fase'){let winners=b.split(',').map(x=>normText(x));if(winners.includes(a))s.extras+=pts}else if(key==='fase_espana'){if(normText(faseEspanaDisplay(p.pred?.extras?.[key]||''))===normText(faseEspanaDisplay(real.extras?.[key]||'')))s.extras+=pts}else if(a===b)s.extras+=pts});
   s.total=s.partidos+s.grupos+s.cuadro+s.extras;return s
 }
-function renderRanking(){let st=getAdmin(),rows=(st.players||[]).map(p=>({name:p.name||'Sin nombre',score:scorePlayer(p,st.real||{})})).sort((a,b)=>b.score.total-a.score.total);$('rankingBox').innerHTML=rows.length?`<table class="table leader"><thead><tr><th>Pos.</th><th>Jugador</th><th>Total</th><th>Partidos</th><th>Grupos</th><th>Cuadro</th><th>Extras</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td class="score">${r.score.total}</td><td>${r.score.partidos}</td><td>${r.score.grupos}</td><td>${r.score.cuadro}</td><td>${r.score.extras}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Importa porras para ver el ranking. Hasta que no metas resultados reales, todos aparecerán con 0 puntos.</p>';renderPorras()}
+function scoreSingleMatch(pr,rr){
+  if(!pr||!rr||pr.h==null||pr.a==null||rr.h==null||rr.a==null)return 0;
+  let pts=0;
+  if(outcome(pr)===outcome(rr))pts+=1;
+  if(diff(pr)===diff(rr))pts+=1;
+  if(pr.h===rr.h&&pr.a===rr.a)pts+=2;
+  return pts;
+}
+function renderResultados(){
+  if(!$('resultadosBox'))return;
+  let st=getAdmin(),real=st.real||{},players=st.players||[],rm=real.matches||{};
+  let played=matches.filter(m=>{let r=rm[m.id];return r&&r.h!=null&&r.a!=null&&r.h!==''&&r.a!==''});
+  if(!played.length){$('resultadosBox').innerHTML='<p class="muted">Todavía no hay resultados reales guardados online.</p>';return}
+  $('resultadosBox').innerHTML=Object.keys(groups).map(g=>{
+    let groupPlayed=played.filter(m=>m.group===g);
+    if(!groupPlayed.length)return '';
+    return `<div class="card"><h3>Grupo ${g}</h3>${groupPlayed.map(m=>{
+      let rr=rm[m.id];
+      let rows=players.map(p=>{let pr=p.pred?.matches?.[m.id]||{};let has=pr.h!=null&&pr.a!=null;let pts=scoreSingleMatch(pr,rr);return `<tr><td>${escapeHtml(p.name||'Sin nombre')}</td><td>${has?escapeHtml(pr.h+' - '+pr.a):'-'}</td><td><b>${pts}</b></td></tr>`}).join('');
+      return `<details open><summary><b>${escapeHtml(m.home)} ${rr.h} - ${rr.a} ${escapeHtml(m.away)}</b></summary><table class="table"><thead><tr><th>Jugador</th><th>Su porra</th><th>Puntos</th></tr></thead><tbody>${rows}</tbody></table></details>`
+    }).join('')}</div>`
+  }).join('');
+}
+function renderRanking(){let st=getAdmin(),rows=(st.players||[]).map(p=>({name:p.name||'Sin nombre',score:scorePlayer(p,st.real||{})})).sort((a,b)=>b.score.total-a.score.total);$('rankingBox').innerHTML=rows.length?`<table class="table leader"><thead><tr><th>Pos.</th><th>Jugador</th><th>Total</th><th>Partidos</th><th>Grupos</th><th>Cuadro</th><th>Extras</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td class="score">${r.score.total}</td><td>${r.score.partidos}</td><td>${r.score.grupos}</td><td>${r.score.cuadro}</td><td>${r.score.extras}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Importa porras para ver el ranking. Hasta que no metas resultados reales, todos aparecerán con 0 puntos.</p>';renderResultados();renderPorras()}
 function renderPorras(){if(!$('porrasBox'))return;let st=getAdmin(),players=st.players||[];updateParticipantsCount(players.length);if(!players.length){$('porrasBox').innerHTML='<p class="muted">Todavía no hay porras publicadas.</p>';return}function resumenCuadro(p){let b=p.pred?.bracket||{};return `<table class="table"><tbody><tr><td>Campeón</td><td><b>${escapeHtml((b.final||[])[0]||'-')}</b></td></tr><tr><td>Finalistas</td><td>${escapeHtml((b.semis||[]).filter(Boolean).join(', ')||'-')}</td></tr><tr><td>Semifinalistas</td><td>${escapeHtml((b.cuartos||[]).filter(Boolean).join(', ')||'-')}</td></tr></tbody></table>`}function resumenExtras(p){let e=p.pred?.extras||{};return `<table class="table"><tbody>${extras.map(([key,label])=>`<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(key==='fase_espana'?faseEspanaDisplay(e[key]||'-'):(e[key]||'-'))}</td></tr>`).join('')}</tbody></table>`}function resumenGrupos(p){let c=calcTables(p.pred?.matches||{});return Object.entries(c.byGroup).map(([g,rows])=>`<div class="card"><h3>Grupo ${g}</h3><table class="table"><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(r.team)}</td><td>${r.pts} pts</td></tr>`).join('')}</tbody></table></div>`).join('')}let admin=isAdminUnlocked();$('porrasBox').innerHTML=`<p><b>👥 Participantes: ${players.length}</b></p>`+players.map((p,i)=>`<div class="card"><div class="row"><h3 style="margin-right:auto">${i+1}. ${escapeHtml(p.name||'Sin nombre')}</h3><span class="mini">Publicado: ${formatDate(p.updatedAt)}</span>${admin&&p.id?`<button class="btn bad small" onclick="deletePlayerOnline('${escapeAttr(p.id)}','${escapeAttr(p.name||'Sin nombre')}')">🗑️ Borrar</button>`:''}</div><h4>Resumen del cuadro</h4>${resumenCuadro(p)}<h4>Extras</h4>${resumenExtras(p)}<details><summary><b>Ver clasificación prevista de grupos</b></summary><div class="grid" style="margin-top:10px">${resumenGrupos(p)}</div></details></div>`).join('')}
 function exportPlayer(){saveDraft();let d=getDraft();if(!d.name){alert('Pon tu nombre antes de exportar.');return}downloadJson(`porra_${safe(d.name)}.json`,d)}
 function importPlayers(){let files=$('importFiles').files;if(!files.length)return;let st=getAdmin(),pending=files.length;Array.from(files).forEach(f=>{let r=new FileReader();r.onload=()=>{try{let obj=JSON.parse(r.result);if(obj.pred)st.players.push(obj)}catch(e){alert('No se pudo importar '+f.name)}if(--pending===0){localStorage.setItem('porra_admin',JSON.stringify(st));renderAdmin();renderRanking()}};r.readAsText(f)})}
@@ -269,7 +294,7 @@ function clearPlayerDraft(){if(confirm('¿Borrar tu borrador local?')){localStor
 function clearAdmin(){if(confirm('¿Borrar datos de administrador e importaciones?')){localStorage.removeItem('porra_admin');renderAdmin();renderRanking()}}
 function downloadJson(name,obj){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));a.download=name;a.click();URL.revokeObjectURL(a.href)}
 function safe(s){return s.replace(/[^a-z0-9áéíóúñ_-]+/gi,'_')}function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function escapeAttr(s){return escapeHtml(s).replace(/`/g,'&#96;')}
-renderHome();renderPlayer();renderAdmin();renderRanking();updateCutoffUI();setInterval(updateCutoffUI,30000);initOnline();if(onlineReady())loadOnlineData(false);
+renderHome();renderPlayer();renderAdmin();renderRanking();renderResultados();updateCutoffUI();setInterval(updateCutoffUI,30000);initOnline();if(onlineReady())loadOnlineData(false);
 </script>
 </body>
 </html>
