@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - Online Firebase v4.3</title>
+<title>Porra Mundial 2026 - Online Firebase v4.4</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -14,7 +14,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.3 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.4 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -65,7 +65,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Posición exacta en grupo</td><td>3</td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>1</td></tr><tr><td>Equipo en dieciseisavos</td><td>2</td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Ya no necesitas que cada jugador elija manualmente 1º, 2º, 3º y 4º.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v4.3 final · Cierre 11/06 21:00 · Clave admin por defecto: mundial2026</div>
+<div class="footer">Porra Mundial 2026 · v4.4 bloqueo total · Cierre 11/06 21:00 · Clave admin por defecto: mundial2026</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -84,7 +84,7 @@ let db=null;
 function onlineReady(){return !!db}
 function setOnlineStatus(msg){let el=document.getElementById('onlineStatus');if(el)el.textContent='Estado online: '+msg}
 function isClosed(){return Date.now()>=new Date(CUTOFF_ISO).getTime()}
-function updateCutoffUI(){let closed=isClosed();let el=document.getElementById('cutoffStatus');if(el)el.innerHTML=closed?'🔒 Porra cerrada desde el '+CUTOFF_LABEL:'🕘 Cierre de porras: '+CUTOFF_LABEL;let btn=document.getElementById('publishBtn');if(btn){btn.disabled=closed&&!isAdminUnlocked();btn.textContent=closed?'Porra cerrada':'Publicar mi porra online';}}
+function updateCutoffUI(){let closed=isClosed();let el=document.getElementById('cutoffStatus');if(el)el.innerHTML=closed?'🔒 Porra cerrada desde el '+CUTOFF_LABEL+'. Ya no se pueden publicar ni actualizar porras.':'🕘 Cierre de porras: '+CUTOFF_LABEL;let btn=document.getElementById('publishBtn');if(btn){btn.disabled=closed;btn.textContent=closed?'Porra cerrada':'Publicar mi porra online';}}
 function updateParticipantsCount(n){let el=document.getElementById('participantsCount');if(el)el.textContent='👥 Participantes: '+(n||0)}
 function sanitizeScoreInput(el){let v=String(el.value||'').replace(/\D/g,'');if(v===''){el.value='';return}let n=Math.max(0,Math.min(20,Number(v)));el.value=String(n)}
 function formatDate(v){try{let d=v&&v.toDate?v.toDate():new Date(v);if(!d||isNaN(d.getTime()))return '-';return d.toLocaleString('es-ES',{timeZone:'Europe/Madrid',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch{return '-'}}
@@ -111,7 +111,7 @@ async function loadOnlineData(showAlert=true){
   }catch(e){console.error(e);alert('No se pudieron cargar los datos online: '+e.message)}
 }
 async function publishPlayerOnline(){
-  if(isClosed()&&!isAdminUnlocked()){alert('La porra está cerrada desde el '+CUTOFF_LABEL+'. Ya no se pueden publicar ni modificar porras.');return}
+  if(isClosed()){alert('La porra está cerrada desde el '+CUTOFF_LABEL+'. Ya no se pueden publicar ni actualizar porras.');return}
   saveDraft();let d=getDraft();
   if(!d.name){alert('Pon tu nombre antes de publicar.');return}
   if(!onlineReady()){alert('Primero hay que pegar la configuración de Firebase en el HTML.');return}
