@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - Online Firebase v4.4</title>
+<title>Porra Mundial 2026 - Online Firebase v4.6</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -14,7 +14,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.5 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.6 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -23,6 +23,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
     <button class="tab" data-tab="ranking">Ranking</button>
     <button class="tab" data-tab="resultados">Resultados</button>
     <button class="tab" data-tab="porras">Porras de todos</button>
+    <button class="tab" data-tab="cuadro_final">Cuadro final</button>
     <button class="tab" data-tab="reglas">Reglas</button>
   </div>
 
@@ -63,9 +64,10 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
   <section id="ranking" class="section"><div class="card"><h3>Ranking automático</h3><p class="muted">Todos empiezan con 0 puntos. Solo se suman puntos de partidos cuando el administrador mete resultados reales ya jugados.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar ranking online</button><div id="rankingBox"></div></div></section>
   <section id="resultados" class="section"><div class="card"><h3>Resultados y porras por partido</h3><p class="muted">Aquí se ve, partido a partido y en orden de fecha, lo que ha pronosticado cada participante. Si el partido ya está jugado, también aparecen el resultado real y los puntos obtenidos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar resultados online</button><div id="resultadosBox"></div></div></section>
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
+  <section id="cuadro_final" class="section"><div class="card"><h3>Cuadro final</h3><p class="muted">Consulta el cuadro real y el cuadro previsto por cada participante. Sirve para ver campeones, finalistas, semifinalistas y todos los cruces de eliminatorias.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Posición exacta en grupo</td><td>3</td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>1</td></tr><tr><td>Equipo en dieciseisavos</td><td>2</td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Equipo más goleado primera fase</td><td>Se puntúa solo al terminar toda la fase de grupos.</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Ya no necesitas que cada jugador elija manualmente 1º, 2º, 3º y 4º.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v4.5 ordenada · Cierre 11/06 21:00 · Clave admin por defecto: mundial2026</div>
+<div class="footer">Porra Mundial 2026 · v4.6 cuadro final · Cierre 11/06 21:00 · Clave admin por defecto: mundial2026</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -106,7 +108,7 @@ async function loadOnlineData(showAlert=true){
     const adminDoc=await db.collection('estado').doc('admin').get();
     if(adminDoc.exists){let data=adminDoc.data();if(data.real)st.real=data.real}
     localStorage.setItem('porra_admin',JSON.stringify(st));
-    renderAdmin();renderRanking();renderResultados();renderPorras();
+    renderAdmin();renderRanking();renderResultados();renderPorras();renderCuadroFinal();
     if(showAlert)alert('Datos online actualizados.');
   }catch(e){console.error(e);alert('No se pudieron cargar los datos online: '+e.message)}
 }
@@ -178,7 +180,7 @@ function matchLabel(m){return MATCH_SCHEDULE[m.id]?.[0]||''}
 function chronoMatches(){return [...matches].sort((a,b)=>matchOrder(a)-matchOrder(b))}
 function renderMatchInputCards(prefix,matchData,handler){let lastDate='';return chronoMatches().map(m=>{let date=matchLabel(m).split(' ')[0]||'Sin fecha';let r=matchData?.[m.id]||{};let head=date!==lastDate?`<h3>${escapeHtml(date)}</h3>`:'';lastDate=date;return `${head}<div class="card"><div class="mini"><b>${escapeHtml(matchLabel(m))}</b> · Grupo ${m.group}</div><div class="match"><div class="teamL">${escapeHtml(m.home)}</div><input type="number" min="0" max="20" inputmode="numeric" oninput="sanitizeScoreInput(this)" id="${prefix}_${m.id}_h" value="${r.h??''}" onchange="${handler}"><div class="vs">-</div><input type="number" min="0" max="20" inputmode="numeric" oninput="sanitizeScoreInput(this)" id="${prefix}_${m.id}_a" value="${r.a??''}" onchange="${handler}"><div class="teamR">${escapeHtml(m.away)}</div></div></div>`}).join('')}
 function $(id){return document.getElementById(id)}
-function go(id){document.querySelectorAll('.tab[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));if(id==='ranking')renderRanking();if(id==='resultados')renderResultados();if(id==='porras')renderPorras();renderAllDynamic()}
+function go(id){document.querySelectorAll('.tab[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));if(id==='ranking')renderRanking();if(id==='resultados')renderResultados();if(id==='porras')renderPorras();if(id==='cuadro_final')renderCuadroFinal();renderAllDynamic()}
 function isAdminUnlocked(){return sessionStorage.getItem('porra_admin_unlocked')==='1'}
 function askAdminPassword(){let pass=prompt('Clave de administrador');if(pass===ADMIN_PASSWORD){sessionStorage.setItem('porra_admin_unlocked','1');go('admin')}else if(pass!==null){alert('Clave incorrecta')}}
 function lockAdmin(){sessionStorage.removeItem('porra_admin_unlocked');go('inicio')}
@@ -298,8 +300,41 @@ function renderResultados(){
     return `${head}<div class="card"><details ${played?'open':''}><summary><b>${escapeHtml(matchLabel(m))} · Grupo ${m.group} · ${escapeHtml(m.home)} ${played?rr.h+' - '+rr.a:'vs'} ${escapeHtml(m.away)}</b></summary><table class="table"><thead><tr><th>Jugador</th><th>Su porra</th><th>Puntos</th></tr></thead><tbody>${rows}</tbody></table></details></div>`
   }).join('');
 }
-function renderRanking(){let st=getAdmin(),rows=(st.players||[]).map(p=>({name:p.name||'Sin nombre',score:scorePlayer(p,st.real||{})})).sort((a,b)=>b.score.total-a.score.total);$('rankingBox').innerHTML=rows.length?`<table class="table leader"><thead><tr><th>Pos.</th><th>Jugador</th><th>Total</th><th>Partidos</th><th>Grupos</th><th>Cuadro</th><th>Extras</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td class="score">${r.score.total}</td><td>${r.score.partidos}</td><td>${r.score.grupos}</td><td>${r.score.cuadro}</td><td>${r.score.extras}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Importa porras para ver el ranking. Hasta que no metas resultados reales, todos aparecerán con 0 puntos.</p>';renderResultados();renderPorras()}
+function renderRanking(){let st=getAdmin(),rows=(st.players||[]).map(p=>({name:p.name||'Sin nombre',score:scorePlayer(p,st.real||{})})).sort((a,b)=>b.score.total-a.score.total);$('rankingBox').innerHTML=rows.length?`<table class="table leader"><thead><tr><th>Pos.</th><th>Jugador</th><th>Total</th><th>Partidos</th><th>Grupos</th><th>Cuadro</th><th>Extras</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(r.name)}</td><td class="score">${r.score.total}</td><td>${r.score.partidos}</td><td>${r.score.grupos}</td><td>${r.score.cuadro}</td><td>${r.score.extras}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Importa porras para ver el ranking. Hasta que no metas resultados reales, todos aparecerán con 0 puntos.</p>';renderResultados();renderPorras();renderCuadroFinal()}
 function renderPorras(){if(!$('porrasBox'))return;let st=getAdmin(),players=st.players||[];updateParticipantsCount(players.length);if(!players.length){$('porrasBox').innerHTML='<p class="muted">Todavía no hay porras publicadas.</p>';return}function resumenCuadro(p){let b=p.pred?.bracket||{};return `<table class="table"><tbody><tr><td>Campeón</td><td><b>${escapeHtml((b.final||[])[0]||'-')}</b></td></tr><tr><td>Finalistas</td><td>${escapeHtml((b.semis||[]).filter(Boolean).join(', ')||'-')}</td></tr><tr><td>Semifinalistas</td><td>${escapeHtml((b.cuartos||[]).filter(Boolean).join(', ')||'-')}</td></tr></tbody></table>`}function resumenExtras(p){let e=p.pred?.extras||{};return `<table class="table"><tbody>${extras.map(([key,label])=>`<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(key==='fase_espana'?faseEspanaDisplay(e[key]||'-'):(e[key]||'-'))}</td></tr>`).join('')}</tbody></table>`}function resumenGrupos(p){let c=calcTables(p.pred?.matches||{});return Object.entries(c.byGroup).map(([g,rows])=>`<div class="card"><h3>Grupo ${g}</h3><table class="table"><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(r.team)}</td><td>${r.pts} pts</td></tr>`).join('')}</tbody></table></div>`).join('')}let admin=isAdminUnlocked();$('porrasBox').innerHTML=`<p><b>👥 Participantes: ${players.length}</b></p>`+players.map((p,i)=>`<div class="card"><div class="row"><h3 style="margin-right:auto">${i+1}. ${escapeHtml(p.name||'Sin nombre')}</h3><span class="mini">Publicado: ${formatDate(p.updatedAt)}</span>${admin&&p.id?`<button class="btn bad small" onclick="deletePlayerOnline('${escapeAttr(p.id)}','${escapeAttr(p.name||'Sin nombre')}')">🗑️ Borrar</button>`:''}</div><h4>Resumen del cuadro</h4>${resumenCuadro(p)}<h4>Extras</h4>${resumenExtras(p)}<details><summary><b>Ver clasificación prevista de grupos</b></summary><div class="grid" style="margin-top:10px">${resumenGrupos(p)}</div></details></div>`).join('')}
+
+function koDisplayRoundsFromData(pred){
+  pred=pred||{};
+  let bp=bracketPairs(pred.matches||{});
+  return [
+    {key:'dieciseisavos',title:'Dieciseisavos de final',labels:['M73','M74','M75','M76','M77','M78','M79','M80','M81','M82','M83','M84','M85','M86','M87','M88'],pairs:bp,winners:pred.bracket?.dieciseisavos||[]},
+    {key:'octavos',title:'Octavos de final',labels:['M89','M90','M91','M92','M93','M94','M95','M96'],pairs:pairOptionsByIndex(pred.bracket?.dieciseisavos||[],[[1,4],[0,2],[3,5],[6,7],[10,11],[8,9],[13,15],[12,14]]),winners:pred.bracket?.octavos||[]},
+    {key:'cuartos',title:'Cuartos de final',labels:['M97','M98','M99','M100'],pairs:pairOptionsByIndex(pred.bracket?.octavos||[],[[0,1],[4,5],[2,3],[6,7]]),winners:pred.bracket?.cuartos||[]},
+    {key:'semis',title:'Semifinales',labels:['M101','M102'],pairs:pairOptionsByIndex(pred.bracket?.cuartos||[],[[0,1],[2,3]]),winners:pred.bracket?.semis||[]},
+    {key:'final',title:'Final',labels:['M104'],pairs:pairOptionsByIndex(pred.bracket?.semis||[],[[0,1]]),winners:pred.bracket?.final||[]}
+  ];
+}
+function koSummary(pred){
+  let b=pred?.bracket||{};
+  return `<div class="grid"><div class="card"><h3>Campeón</h3><p style="font-size:24px;margin:6px 0"><b>${escapeHtml((b.final||[])[0]||'-')}</b></p></div><div class="card"><h3>Finalistas</h3><p>${escapeHtml((b.semis||[]).filter(Boolean).join(' · ')||'-')}</p></div><div class="card"><h3>Semifinalistas</h3><p>${escapeHtml((b.cuartos||[]).filter(Boolean).join(' · ')||'-')}</p></div></div>`;
+}
+function renderReadOnlyKo(pred){
+  let roundsData=koDisplayRoundsFromData(pred||{});
+  return `<div class="bracket">${roundsData.map(r=>`<div class="round card"><h3>${r.title}</h3>${r.pairs.map((p,i)=>{let w=(r.winners||[])[i]||'';return `<div class="slot"><label>${r.labels[i]} · ${r.title} ${r.pairs.length>1?i+1:''}</label><div class="koPair"><span>${escapeHtml(p[0]||'Pendiente')}</span><span>vs</span><span>${escapeHtml(p[1]||'Pendiente')}</span></div><p class="mini">Ganador: <b>${escapeHtml(w||'Pendiente')}</b></p></div>`}).join('')}</div>`).join('')}</div>`;
+}
+function renderCuadroFinal(){
+  if(!$('cuadroFinalBox')||!$('koViewerSelect'))return;
+  let st=getAdmin(), players=st.players||[];
+  let selEl=$('koViewerSelect');
+  let current=selEl.value||'real';
+  let opts=['<option value="real">Cuadro real</option>'].concat(players.map((p,i)=>`<option value="p_${i}">${escapeHtml(p.name||('Jugador '+(i+1)))}</option>`)).join('');
+  if(selEl.innerHTML!==opts){selEl.innerHTML=opts;selEl.value=current}
+  if(!selEl.value)selEl.value='real';
+  let pred, title, updated='';
+  if(selEl.value==='real'){pred=st.real||{};title='Cuadro real';}
+  else{let idx=Number(selEl.value.replace('p_',''));let p=players[idx];pred=p?.pred||{};title='Cuadro de '+escapeHtml(p?.name||'Jugador');updated=p?.updatedAt?`<p class="mini">Publicado: ${formatDate(p.updatedAt)}</p>`:''}
+  $('cuadroFinalBox').innerHTML=`<h3>${title}</h3>${updated}${koSummary(pred)}${renderReadOnlyKo(pred)}`;
+}
 function exportPlayer(){saveDraft();let d=getDraft();if(!d.name){alert('Pon tu nombre antes de exportar.');return}downloadJson(`porra_${safe(d.name)}.json`,d)}
 function importPlayers(){let files=$('importFiles').files;if(!files.length)return;let st=getAdmin(),pending=files.length;Array.from(files).forEach(f=>{let r=new FileReader();r.onload=()=>{try{let obj=JSON.parse(r.result);if(obj.pred)st.players.push(obj)}catch(e){alert('No se pudo importar '+f.name)}if(--pending===0){localStorage.setItem('porra_admin',JSON.stringify(st));renderAdmin();renderRanking()}};r.readAsText(f)})}
 function removePlayer(i){let st=getAdmin();st.players.splice(i,1);localStorage.setItem('porra_admin',JSON.stringify(st));renderAdmin();renderRanking()}
