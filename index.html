@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - Online Firebase v4.6</title>
+<title>Porra Mundial 2026 - Online Firebase v4.7</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -14,7 +14,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.6 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.7 · clasificación automática · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -51,7 +51,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
   </section>
 
   <section id="admin" class="section">
-    <div class="notice"><b>Modo administrador protegido</b><br>Para entrar usa la clave de administrador. Puedes cambiarla dentro del HTML en la constante <b>ADMIN_PASSWORD</b>.</div>
+    <div class="notice"><b>Modo administrador protegido</b><br>Para entrar usa la clave de administrador.</div>
     <div class="row" style="margin:10px 0"><button class="btn light" onclick="lockAdmin()">Bloquear modo administrador</button></div>
     <div class="subtabs"><button class="admintab active" data-admin="a_importar">1. Importar porras</button><button class="admintab" data-admin="a_resultados">2. Resultados reales</button><button class="admintab" data-admin="a_clasif">3. Clasificación automática</button><button class="admintab" data-admin="a_cuadro">4. Cuadro real</button><button class="admintab" data-admin="a_extras">5. Extras reales</button></div>
     <div id="a_importar" class="adminsection"><div class="card"><h3>Porras online de jugadores</h3><p class="muted">Aquí aparecerán las porras que publiquen tus amigos desde la web.</p><button class="btn secondary" onclick="loadOnlineData()">Cargar porras online</button><div id="importedList"></div></div><div class="card"><h3>Copia de seguridad del administrador</h3><button class="btn blue" onclick="saveAdminOnline()">💾 Guardar resultados online</button><button class="btn secondary" onclick="exportAdminState()">Exportar copia local</button><input class="file" type="file" id="adminStateFile" accept=".json" onchange="importAdminState()"><button class="btn bad" onclick="clearAdmin()">Borrar datos locales</button></div></div>
@@ -65,9 +65,9 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
   <section id="resultados" class="section"><div class="card"><h3>Resultados y porras por partido</h3><p class="muted">Aquí se ve, partido a partido y en orden de fecha, lo que ha pronosticado cada participante. Si el partido ya está jugado, también aparecen el resultado real y los puntos obtenidos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar resultados online</button><div id="resultadosBox"></div></div></section>
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
   <section id="cuadro_final" class="section"><div class="card"><h3>Cuadro final</h3><p class="muted">Consulta el cuadro real y el cuadro previsto por cada participante. Sirve para ver campeones, finalistas, semifinalistas y todos los cruces de eliminatorias.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
-  <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Posición exacta en grupo</td><td>3</td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>1</td></tr><tr><td>Equipo en dieciseisavos</td><td>2</td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Equipo más goleado primera fase</td><td>Se puntúa solo al terminar toda la fase de grupos.</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Ya no necesitas que cada jugador elija manualmente 1º, 2º, 3º y 4º.</div></div></section>
+  <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>1</td></tr><tr><td>Posición exacta en grupo</td><td>+2</td></tr><tr><td><b>Máximo por equipo</b></td><td><b>3</b></td></tr><tr><td colspan="2"><span class="mini">Ejemplo: si aciertas que España se clasifica sumas 1 punto. Si además aciertas su posición exacta en el grupo, sumas +2. Total máximo por equipo: 3 puntos.</span></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Equipo más goleado primera fase</td><td>Se puntúa solo al terminar toda la fase de grupos.</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Ya no necesitas que cada jugador elija manualmente 1º, 2º, 3º y 4º.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v4.6 cuadro final · Cierre 11/06 21:00 · Clave admin por defecto: </div>
+<div class="footer">Porra Mundial 2026 · v4.7 cuadro final · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
