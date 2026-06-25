@@ -14,7 +14,7 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.8 · desglose de puntos · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v4.8.1 · desglose corregido · cierre 11/06 21:00 · dieciseisavos oficiales FIFA</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -62,14 +62,14 @@ h1{margin:0;font-size:26px}.sub{opacity:.92;margin-top:4px;font-size:14px}.wrap{
     <div id="a_extras" class="adminsection hidden"><div class="ok"><button class="btn blue" onclick="saveAdminOnline()">💾 Guardar extras reales online</button></div><div id="realExtras" class="grid"></div><div class="stickyTools"><button class="btn blue" onclick="saveAdminOnline()">💾 Guardar extras reales online</button></div></div>
   </section>
 
-  <section id="ranking" class="section"><div class="card"><h3>Ranking automático</h3><p class="muted">Todos empiezan con 0 puntos. Los partidos suman al meter resultados. Los grupos se van sumando cuando se cierra cada grupo. Los dieciseisavos suman con los clasificados ya confirmados: primeros y segundos al cerrar su grupo; mejores terceros al terminar toda la fase de grupos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar ranking online</button><div id="rankingBox"></div></div></section>
-  <section id="desglose" class="section"><div class="card"><h3>Desglose de puntos</h3><p class="muted">Aquí se explica de dónde salen los puntos de cada jugador: partidos, posiciones exactas de grupos, equipos clasificados y dieciseisavos. Los mejores terceros se sumarán cuando termine toda la fase de grupos.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Jugador:</label><select id="breakdownPlayerSelect" onchange="renderDesglose()"></select></div><div id="desgloseBox" style="margin-top:12px"></div></div></section>
+  <section id="ranking" class="section"><div class="card"><h3>Ranking automático</h3><p class="muted">Todos empiezan con 0 puntos. Los partidos suman al meter resultados. Los grupos se van sumando cuando se cierra cada grupo. Los dieciseisavos suman solo cuando el equipo cae en el cruce exacto del cuadro: primeros y segundos al cerrar su grupo; mejores terceros al terminar toda la fase de grupos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar ranking online</button><div id="rankingBox"></div></div></section>
+  <section id="desglose" class="section"><div class="card"><h3>Desglose de puntos</h3><p class="muted">Aquí se explica de dónde salen los puntos de cada jugador: partidos, posiciones exactas de grupos, equipos clasificados y cruce exacto de dieciseisavos. Los mejores terceros se sumarán cuando termine toda la fase de grupos.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Jugador:</label><select id="breakdownPlayerSelect" onchange="renderDesglose()"></select></div><div id="desgloseBox" style="margin-top:12px"></div></div></section>
   <section id="resultados" class="section"><div class="card"><h3>Resultados y porras por partido</h3><p class="muted">Aquí se ve, partido a partido y en orden de fecha, lo que ha pronosticado cada participante. Si el partido ya está jugado, también aparecen el resultado real y los puntos obtenidos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar resultados online</button><div id="resultadosBox"></div></div></section>
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
   <section id="cuadro_final" class="section"><div class="card"><h3>Cuadro final</h3><p class="muted">Consulta el cuadro real y el cuadro previsto por cada participante. Sirve para ver campeones, finalistas, semifinalistas y todos los cruces de eliminatorias.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
-  <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce correcto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Equipo más goleado primera fase</td><td>Se puntúa solo al terminar toda la fase de grupos.</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
+  <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Equipo más goleado primera fase</td><td>Se puntúa solo al terminar toda la fase de grupos.</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v4.8 desglose de puntos · Cierre 11/06 21:00</div>
+<div class="footer">Porra Mundial 2026 · v4.8.1 desglose de puntos · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -229,9 +229,30 @@ function groupPointsBreakdown(p,real){
   });
   return {total,rows};
 }
+function r32SlotMap(matchData){
+  let map={};
+  bracketPairs(matchData||{}).forEach((pair,matchIndex)=>{
+    pair.forEach((team,side)=>{
+      if(team && !String(team).startsWith('3º')) map[team]={matchIndex,side};
+    });
+  });
+  return map;
+}
+function sameR32Slot(team,predMatches,realMatches){
+  let ps=r32SlotMap(predMatches||{})[team], rs=r32SlotMap(realMatches||{})[team];
+  return !!(ps&&rs&&ps.matchIndex===rs.matchIndex&&ps.side===rs.side);
+}
 function qualifierPointsBreakdown(p,real){
-  let pQual=(calcTables(p.pred?.matches||{}).qualified||[]), known=knownRealQualifiers(real?.matches||{}), rows=[], gPts=0, cPts=0;
-  known.forEach(q=>{let ok=pQual.includes(q.team); let gp=ok?1:0, cp=ok?2:0; gPts+=gp; cPts+=cp; rows.push({...q,ok,groupPts:gp,cuadroPts:cp});});
+  let pMatches=p.pred?.matches||{}, rMatches=real?.matches||{};
+  let pQual=(calcTables(pMatches).qualified||[]), known=knownRealQualifiers(rMatches), rows=[], gPts=0, cPts=0;
+  known.forEach(q=>{
+    let ok=pQual.includes(q.team);
+    let gp=ok?1:0;
+    // Los +2 de dieciseisavos solo se dan si el equipo cae en el mismo cruce/slot exacto del cuadro.
+    // Ejemplo: si Costa de Marfil pasa como 2º de grupo pero el jugador la tenía como mejor tercero en otro cruce, suma +1 de clasificado pero NO +2 de cuadro.
+    let cp=(ok&&sameR32Slot(q.team,pMatches,rMatches))?2:0;
+    gPts+=gp; cPts+=cp; rows.push({...q,ok,groupPts:gp,cuadroPts:cp});
+  });
   return {groupPts:gPts,cuadroPts:cPts,rows};
 }
 function bracketPairs(matchData){
@@ -385,9 +406,9 @@ function renderDesglose(){
     return `<tr><td>${escapeHtml(matchLabel(m))}</td><td>Grupo ${m.group}</td><td>${escapeHtml(m.home)} ${rr.h}-${rr.a} ${escapeHtml(m.away)}</td><td>${pr&&pr.h!=null?escapeHtml(pr.h+'-'+pr.a):'-'}</td><td><b>${pts}</b></td></tr>`;
   }).filter(Boolean).join('');
   let groupHtml=gb.rows.length?gb.rows.map(g=>`<div class="card"><h3>Grupo ${g.group}: ${g.pts} puntos</h3><table class="table"><thead><tr><th>Pos.</th><th>Tu equipo</th><th>Real</th><th>Puntos</th></tr></thead><tbody>${g.details.map(d=>`<tr><td>${d.pos}</td><td>${escapeHtml(d.pred)}</td><td>${escapeHtml(d.real)}</td><td>${d.ok?'✅ <b>3</b>':'0'}</td></tr>`).join('')}</tbody></table></div>`).join(''):'<p class="muted">Aún no hay grupos cerrados para puntuar posiciones exactas.</p>';
-  let qualHtml=qb.rows.length?`<table class="table"><thead><tr><th>Equipo confirmado</th><th>Grupo</th><th>Tipo</th><th>¿Lo tenías?</th><th>Clasificado</th><th>Dieciseisavos</th></tr></thead><tbody>${qb.rows.map(r=>`<tr><td>${escapeHtml(r.team)}</td><td>${r.group}</td><td>${escapeHtml(r.type)}</td><td>${r.ok?'✅ Sí':'❌ No'}</td><td>${r.groupPts}</td><td>${r.cuadroPts}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Aún no hay equipos confirmados para dieciseisavos.</p>';
+  let qualHtml=qb.rows.length?`<table class="table"><thead><tr><th>Equipo confirmado</th><th>Grupo</th><th>Tipo</th><th>¿Lo tenías?</th><th>Clasificado</th><th>Cruce exacto</th></tr></thead><tbody>${qb.rows.map(r=>`<tr><td>${escapeHtml(r.team)}</td><td>${r.group}</td><td>${escapeHtml(r.type)}</td><td>${r.ok?'✅ Sí':'❌ No'}</td><td>${r.groupPts}</td><td>${r.cuadroPts}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Aún no hay equipos confirmados para dieciseisavos.</p>';
   let thirdsNote=allGroupMatchesComplete(real.matches||{})?'✅ Mejores terceros ya calculados.':'⏳ Los 8 mejores terceros se calcularán al terminar toda la fase de grupos.';
-  $('desgloseBox').innerHTML=`<h3>${escapeHtml(p.name||'Jugador')}</h3><div class="grid"><div class="card"><h3>Total</h3><p style="font-size:26px;margin:4px 0"><b>${score.total}</b></p></div><div class="card"><h3>Partidos</h3><p style="font-size:22px;margin:4px 0"><b>${score.partidos}</b></p></div><div class="card"><h3>Grupos</h3><p style="font-size:22px;margin:4px 0"><b>${score.grupos}</b></p><p class="mini">Posiciones: ${gb.total} · Clasificados: ${qb.groupPts}</p></div><div class="card"><h3>Cuadro</h3><p style="font-size:22px;margin:4px 0"><b>${score.cuadro}</b></p><p class="mini">Dieciseisavos confirmados: ${qb.cuadroPts}</p></div></div><div class="notice" style="margin:12px 0"><b>Dieciseisavos:</b> se suman +2 por cada equipo confirmado que el jugador tenía en dieciseisavos. Los 1º y 2º cuentan al cerrar su grupo. ${thirdsNote}</div><h3>Partidos jugados</h3><table class="table"><thead><tr><th>Fecha</th><th>Grupo</th><th>Resultado real</th><th>Su porra</th><th>Puntos</th></tr></thead><tbody>${matchRows||'<tr><td colspan="5">Sin partidos puntuados todavía.</td></tr>'}</tbody></table><h3 style="margin-top:16px">Puntos por posiciones de grupo</h3><div class="grid">${groupHtml}</div><h3 style="margin-top:16px">Clasificados y dieciseisavos confirmados</h3>${qualHtml}`;
+  $('desgloseBox').innerHTML=`<h3>${escapeHtml(p.name||'Jugador')}</h3><div class="grid"><div class="card"><h3>Total</h3><p style="font-size:26px;margin:4px 0"><b>${score.total}</b></p></div><div class="card"><h3>Partidos</h3><p style="font-size:22px;margin:4px 0"><b>${score.partidos}</b></p></div><div class="card"><h3>Grupos</h3><p style="font-size:22px;margin:4px 0"><b>${score.grupos}</b></p><p class="mini">Posiciones: ${gb.total} · Clasificados: ${qb.groupPts}</p></div><div class="card"><h3>Cuadro</h3><p style="font-size:22px;margin:4px 0"><b>${score.cuadro}</b></p><p class="mini">Dieciseisavos confirmados: ${qb.cuadroPts}</p></div></div><div class="notice" style="margin:12px 0"><b>Dieciseisavos:</b> se suman +2 solo si el equipo cae en el mismo cruce/slot exacto del cuadro que tenía el jugador. Si lo tenía clasificado pero en otro cruce, suma +1 de clasificado pero 0 en cuadro. Los 1º y 2º cuentan al cerrar su grupo. ${thirdsNote}</div><h3>Partidos jugados</h3><table class="table"><thead><tr><th>Fecha</th><th>Grupo</th><th>Resultado real</th><th>Su porra</th><th>Puntos</th></tr></thead><tbody>${matchRows||'<tr><td colspan="5">Sin partidos puntuados todavía.</td></tr>'}</tbody></table><h3 style="margin-top:16px">Puntos por posiciones de grupo</h3><div class="grid">${groupHtml}</div><h3 style="margin-top:16px">Clasificados y dieciseisavos confirmados</h3>${qualHtml}`;
 }
 
 function exportPlayer(){saveDraft();let d=getDraft();if(!d.name){alert('Pon tu nombre antes de exportar.');return}downloadJson(`porra_${safe(d.name)}.json`,d)}
