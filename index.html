@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - v5.1 Cuadro Pro</title>
+<title>Porra Mundial 2026 - v5.1.2 Reglas extras</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -39,7 +39,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.1 · FIFA Style · Cuadro Pro · cierre 11/06 21:00</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.1.1 · FIFA Style · Cuadro Pro · cierre 11/06 21:00</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -92,9 +92,9 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
   <section id="resultados" class="section"><div class="card"><h3>Resultados y porras por partido</h3><p class="muted">Aquí se ve, partido a partido y en orden de fecha, lo que ha pronosticado cada participante. Si el partido ya está jugado, también aparecen el resultado real y los puntos obtenidos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar resultados online</button><div id="resultadosBox"></div></div></section>
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
   <section id="cuadro_final" class="section"><div class="card"><h3>Cuadro final</h3><p class="muted">Consulta el cuadro real y el cuadro previsto por cada participante con una vista tipo periódico deportivo: cruces, banderas, ganadores y camino hasta la final.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
-  <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td>Extras</td><td>6-20</td></tr><tr><td>Equipo más goleado primera fase</td><td>Se puntúa solo al terminar toda la fase de grupos.</td></tr><tr><td>Fase alcanzada por España</td><td>Máximo: Final. Si España gana o pierde la final, cuenta como Final.</td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
+  <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td colspan="2"><b>⭐ Extras</b></td></tr><tr><td>🏆 Campeón del Mundo</td><td><b>20</b></td></tr><tr><td>🥈 Subcampeón</td><td><b>10</b></td></tr><tr><td>⚽ Pichichi del Mundial</td><td><b>10</b></td></tr><tr><td>⭐ Mejor jugador del Mundial</td><td><b>10</b></td></tr><tr><td>🧤 Mejor portero del Mundial</td><td><b>10</b></td></tr><tr><td>🌍 Equipo más goleado del Mundial</td><td><b>6</b></td></tr><tr><td>📉 Equipo más goleado en la primera fase</td><td><b>6</b><br><span class="mini">Se puntúa al finalizar la fase de grupos.</span></td></tr><tr><td>🇪🇸 Fase alcanzada por España</td><td><b>6</b><br><span class="mini">Máximo: Final. Si España gana o pierde la final, cuenta como Final.</span></td></tr><tr><td>🇪🇸 Pichichi de España</td><td><b>6</b></td></tr><tr><td colspan="2"><span class="mini"><b>Importante:</b> los extras se puntúan únicamente cuando la categoría queda decidida oficialmente.</span></td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v5.1 Cuadro Pro · Cierre 11/06 21:00</div>
+<div class="footer">Porra Mundial 2026 · v5.1.1 Cuadro Pro · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -425,12 +425,28 @@ function renderDesglose(){
 function renderPorras(){
   if(!$('porrasBox'))return;
   let st=getAdmin(),players=st.players||[];
+  updateParticipantsCount(players.length);
   if(!players.length){$('porrasBox').innerHTML='<p class="muted">Todavía no hay porras publicadas.</p>';return}
-  $('porrasBox').innerHTML=players.map((p,i)=>{
+
+  function resumenGrupos(p){
+    let c=calcTables(p.pred?.matches||{});
+    return Object.entries(c.byGroup).map(([g,rows])=>`<div class="card"><h3>Grupo ${g}</h3><table class="table"><thead><tr><th>Pos.</th><th>Equipo</th><th>Pts</th><th>DG</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${i<2?'rank1':i===2?'rank3':''}"><td>${i+1}</td><td>${escapeHtml(r.team)}</td><td><b>${r.pts}</b></td><td>${r.dg}</td></tr>`).join('')}</tbody></table></div>`).join('')
+  }
+  function resumenExtras(p){
+    let e=p.pred?.extras||{};
+    return `<table class="table"><tbody>${extras.map(([key,label])=>`<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(key==='fase_espana'?faseEspanaDisplay(e[key]||'-'):(e[key]||'-'))}</td></tr>`).join('')}</tbody></table>`
+  }
+  function resumenCuadroClasico(p){
+    let b=p.pred?.bracket||{};
+    return `<table class="table"><tbody><tr><td>Campeón</td><td><b>${escapeHtml((b.final||[])[0]||'-')}</b></td></tr><tr><td>Finalistas</td><td>${escapeHtml((b.semis||[]).filter(Boolean).join(', ')||'-')}</td></tr><tr><td>Semifinalistas</td><td>${escapeHtml((b.cuartos||[]).filter(Boolean).join(', ')||'-')}</td></tr></tbody></table>`
+  }
+
+  let admin=isAdminUnlocked();
+  $('porrasBox').innerHTML=`<p><b>👥 Participantes: ${players.length}</b></p>`+players.map((p,i)=>{
     let sc=scorePlayer(p,st.real||{});
     let champion=p.pred?.bracket?.final?.[0]||p.pred?.extras?.campeon||'Pendiente';
     let finalistas=(p.pred?.bracket?.semis||[]).filter(Boolean).join(' · ')||'Pendiente';
-    return `<div class="card"><details><summary><b>${escapeHtml(p.name||('Jugador '+(i+1)))}</b> · ${sc.total} pts · Campeón: ${escapeHtml(champion)}</summary><div class="rank-summary" style="grid-template-columns:repeat(4,minmax(120px,1fr))"><div class="summary-tile"><span>Total</span><b>${sc.total}</b></div><div class="summary-tile"><span>Partidos</span><b>${sc.partidos}</b></div><div class="summary-tile"><span>Grupos</span><b>${sc.grupos}</b></div><div class="summary-tile"><span>Cuadro</span><b>${sc.cuadro}</b></div></div><p><b>Finalistas previstos:</b> ${escapeHtml(finalistas)}</p><p><b>Campeón previsto:</b> ${escapeHtml(champion)}</p></details></div>`;
+    return `<div class="card"><details><summary><b>${i+1}. ${escapeHtml(p.name||('Jugador '+(i+1)))}</b> · ${sc.total} pts · Campeón: ${escapeHtml(champion)}</summary><div class="rank-summary" style="grid-template-columns:repeat(4,minmax(120px,1fr))"><div class="summary-tile"><span>Total</span><b>${sc.total}</b></div><div class="summary-tile"><span>Partidos</span><b>${sc.partidos}</b></div><div class="summary-tile"><span>Grupos</span><b>${sc.grupos}</b></div><div class="summary-tile"><span>Cuadro</span><b>${sc.cuadro}</b></div></div><p class="mini">Publicado: ${formatDate(p.updatedAt)}</p><p><b>Finalistas previstos:</b> ${escapeHtml(finalistas)}</p><p><b>Campeón previsto:</b> ${escapeHtml(champion)}</p>${admin&&p.id?`<button class="btn bad small" onclick="deletePlayerOnline('${escapeAttr(p.id)}','${escapeAttr(p.name||'Sin nombre')}')">🗑️ Borrar</button>`:''}<h4>Resumen del cuadro</h4>${resumenCuadroClasico(p)}<h4>Extras</h4>${resumenExtras(p)}<details style="margin-top:12px"><summary><b>Ver clasificación prevista de grupos</b></summary><div class="grid" style="margin-top:10px">${resumenGrupos(p)}</div></details></details></div>`;
   }).join('');
 }
 function teamFlag(team){
