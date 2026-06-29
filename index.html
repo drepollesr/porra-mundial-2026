@@ -40,7 +40,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.2 · FIFA Style · Auditoría Global · cierre 11/06 21:00</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.3.2 · FIFA Style · Auditoría Global · cierre 11/06 21:00</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -95,7 +95,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
   <section id="cuadro_final" class="section"><div class="card"><h3>🏆 Cuadro oficial del Mundial</h3><p class="muted">Sigue el cuadro real de eliminatorias: dieciseisavos, octavos, cuartos, semifinales y final. Los ganadores avanzan automáticamente cuando el administrador actualiza el cuadro.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td colspan="2"><b>⭐ Extras</b></td></tr><tr><td>🏆 Campeón del Mundo</td><td><b>20</b></td></tr><tr><td>🥈 Subcampeón</td><td><b>10</b></td></tr><tr><td>⚽ Pichichi del Mundial</td><td><b>10</b></td></tr><tr><td>⭐ Mejor jugador del Mundial</td><td><b>10</b></td></tr><tr><td>🧤 Mejor portero del Mundial</td><td><b>10</b></td></tr><tr><td>🌍 Equipo más goleado del Mundial</td><td><b>6</b></td></tr><tr><td>📉 Equipo más goleado en la primera fase</td><td><b>6</b><br><span class="mini">Se puntúa al finalizar la fase de grupos.</span></td></tr><tr><td>🇪🇸 Fase alcanzada por España</td><td><b>6</b><br><span class="mini">Máximo: Final. Si España gana o pierde la final, cuenta como Final.</span></td></tr><tr><td>🇪🇸 Pichichi de España</td><td><b>6</b></td></tr><tr><td colspan="2"><span class="mini"><b>Importante:</b> los extras se puntúan únicamente cuando la categoría queda decidida oficialmente.</span></td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v5.3.2 Cuadro Oficial · Cierre 11/06 21:00</div>
+<div class="footer">Porra Mundial 2026 · v5.3.3.2 Cuadro Oficial · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -188,12 +188,25 @@ const teams=Object.values(groups).flat();
 const extras=[['campeon','Campeón',20],['subcampeon','Subcampeón',12],['pichichi','Pichichi',12],['mejor_jugador','Mejor jugador',10],['mejor_portero','Mejor portero',8],['mas_goleador','Equipo más goleador',8],['mas_goleado_primera_fase','Equipo más goleado en la primera fase',8],['fase_espana','Fase alcanzada por España',8],['pichichi_espana','Pichichi de España',6]];
 const rounds=[['dieciseisavos','Ganadores de dieciseisavos',16,4],['octavos','Ganadores de octavos',8,6],['cuartos','Ganadores de cuartos',4,8],['semis','Finalistas',2,12],['final','Campeón',1,20]];
 const koSchedule={
-  M73:'28/06 · 19:00',M74:'28/06 · 22:00',M75:'29/06 · 02:00',M76:'29/06 · 05:00',
-  M77:'29/06 · 19:00',M78:'29/06 · 22:00',M79:'30/06 · 02:00',M80:'30/06 · 05:00',
-  M81:'30/06 · 19:00',M82:'30/06 · 22:00',M83:'01/07 · 02:00',M84:'01/07 · 05:00',
-  M85:'01/07 · 19:00',M86:'01/07 · 22:00',M87:'02/07 · 02:00',M88:'02/07 · 05:00',
-  M89:'04/07 · 19:00',M90:'04/07 · 22:00',M91:'05/07 · 02:00',M92:'05/07 · 05:00',
-  M93:'05/07 · 19:00',M94:'05/07 · 22:00',M95:'06/07 · 02:00',M96:'06/07 · 05:00',
+  // Horarios en España peninsular (CEST). Dieciseisavos corregidos según calendario oficial publicado.
+  M73:'28/06 · 21:00',  // 2A - 2B
+  M74:'29/06 · 22:30',  // 1E - 3º A/B/C/D/F
+  M75:'30/06 · 03:00',  // 1F - 2C
+  M76:'29/06 · 19:00',  // 1C - 2F
+  M77:'30/06 · 23:00',  // 1I - 3º C/D/F/G/H
+  M78:'30/06 · 19:00',  // 2E - 2I
+  M79:'01/07 · 03:00',  // 1A - 3º C/E/F/H/I
+  M80:'01/07 · 18:00',  // 1L - 3º E/H/I/J/K
+  M81:'02/07 · 02:00',  // 1D - 3º B/E/F/I/J
+  M82:'01/07 · 22:00',  // 1G - 3º A/E/H/I/J
+  M83:'03/07 · 01:00',  // 2K - 2L
+  M84:'02/07 · 21:00',  // 1H - 2J
+  M85:'03/07 · 05:00',  // 1B - 3º E/F/G/I/J
+  M86:'04/07 · 00:00',  // 1J - 2H
+  M87:'04/07 · 03:30',  // 1K - 3º D/E/I/J/L
+  M88:'03/07 · 20:00',  // 2D - 2G
+  M89:'04/07 · 19:00',M90:'04/07 · 23:00',M91:'05/07 · 22:00',M92:'06/07 · 02:00',
+  M93:'Horario pendiente',M94:'Horario pendiente',M95:'Horario pendiente',M96:'Horario pendiente',
   M97:'09/07 · 21:00',M98:'10/07 · 21:00',M99:'11/07 · 21:00',M100:'12/07 · 21:00',
   M101:'14/07 · 21:00',M102:'15/07 · 21:00',M103:'18/07 · 21:00',M104:'19/07 · 21:00'
 };
