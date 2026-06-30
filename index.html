@@ -40,7 +40,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.3.2 · FIFA Style · Auditoría Global · cierre 11/06 21:00</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.4 · FIFA Style · Auditoría Global · cierre 11/06 21:00</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -88,14 +88,14 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
     <div id="a_extras" class="adminsection hidden"><div class="ok"><button class="btn blue" onclick="saveAdminOnline()">💾 Guardar extras reales online</button></div><div id="realExtras" class="grid"></div><div class="stickyTools"><button class="btn blue" onclick="saveAdminOnline()">💾 Guardar extras reales online</button></div></div>
   </section>
 
-  <section id="ranking" class="section"><div class="card"><h3>Ranking automático</h3><p class="muted">Nueva visualización v5.0: podio, carrera de barras y desglose rápido. Los partidos suman al meter resultados. Los grupos se van sumando cuando se cierra cada grupo. Los dieciseisavos suman solo cuando el equipo cae en el cruce exacto del cuadro.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar ranking online</button><div id="rankingBox"></div></div></section>
+  <section id="ranking" class="section"><div class="card"><h3>Ranking automático</h3><p class="muted">Nueva visualización v5.0: podio, carrera de barras y desglose rápido. Los partidos suman al meter resultados. Los grupos se van sumando cuando se cierra cada grupo. Los ganadores del cuadro suman cuando el equipo pasa de ronda, aunque haya llegado por otro cruce.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar ranking online</button><div id="rankingBox"></div></div></section>
   <section id="desglose" class="section"><div class="card"><h3>Desglose de puntos</h3><p class="muted">Aquí se explica de dónde salen los puntos de cada jugador: partidos, posiciones exactas de grupos, equipos clasificados y cruce exacto de dieciseisavos. Los mejores terceros se sumarán cuando termine toda la fase de grupos.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Jugador:</label><select id="breakdownPlayerSelect" onchange="renderDesglose()"></select></div><div id="desgloseBox" style="margin-top:12px"></div></div></section>
   <section id="resultados" class="section"><div class="card"><h3>Resultados y porras por partido</h3><p class="muted">Aquí se ve, partido a partido y en orden de fecha, lo que ha pronosticado cada participante. Si el partido ya está jugado, también aparecen el resultado real y los puntos obtenidos.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar resultados online</button><div id="resultadosBox"></div></div></section>
   <section id="porras" class="section"><div class="card"><h3>Porras de todos</h3><p class="muted">Aquí puedes ver las predicciones publicadas online por cada jugador para que todos puedan comparar sus porras.</p><button class="btn secondary" onclick="loadOnlineData()">Actualizar porras online</button><div id="porrasBox"></div></div></section>
   <section id="cuadro_final" class="section"><div class="card"><h3>🏆 Cuadro oficial del Mundial</h3><p class="muted">Sigue el cuadro real de eliminatorias: dieciseisavos, octavos, cuartos, semifinales y final. Los ganadores avanzan automáticamente cuando el administrador actualiza el cuadro.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td colspan="2"><b>⭐ Extras</b></td></tr><tr><td>🏆 Campeón del Mundo</td><td><b>20</b></td></tr><tr><td>🥈 Subcampeón</td><td><b>10</b></td></tr><tr><td>⚽ Pichichi del Mundial</td><td><b>10</b></td></tr><tr><td>⭐ Mejor jugador del Mundial</td><td><b>10</b></td></tr><tr><td>🧤 Mejor portero del Mundial</td><td><b>10</b></td></tr><tr><td>🌍 Equipo más goleado del Mundial</td><td><b>6</b></td></tr><tr><td>📉 Equipo más goleado en la primera fase</td><td><b>6</b><br><span class="mini">Se puntúa al finalizar la fase de grupos.</span></td></tr><tr><td>🇪🇸 Fase alcanzada por España</td><td><b>6</b><br><span class="mini">Máximo: Final. Si España gana o pierde la final, cuenta como Final.</span></td></tr><tr><td>🇪🇸 Pichichi de España</td><td><b>6</b></td></tr><tr><td colspan="2"><span class="mini"><b>Importante:</b> los extras se puntúan únicamente cuando la categoría queda decidida oficialmente.</span></td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v5.3.3.2 Cuadro Oficial · Cierre 11/06 21:00</div>
+<div class="footer">Porra Mundial 2026 · v5.3.4 Cuadro Oficial · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -425,6 +425,41 @@ function renderRanking(){
 }
 
 
+function realRoundPairs(real,key){
+  real=real||{};
+  const b=real.bracket||{};
+  if(key==='dieciseisavos') return bracketPairs(real.matches||{});
+  const defs={
+    octavos:{prev:'dieciseisavos',pairs:[[1,4],[0,2],[3,5],[6,7],[10,11],[8,9],[13,15],[12,14]]},
+    cuartos:{prev:'octavos',pairs:[[0,1],[4,5],[2,3],[6,7]]},
+    semis:{prev:'cuartos',pairs:[[0,1],[2,3]]},
+    final:{prev:'semis',pairs:[[0,1]]}
+  };
+  const d=defs[key];
+  if(!d) return [];
+  return pairOptionsByIndex(b[d.prev]||[],d.pairs);
+}
+function roundOutcomeForTeam(team,real,key,slotIndex){
+  const b=real?.bracket||{};
+  const winners=Array.isArray(b[key]) ? b[key].filter(Boolean) : [];
+  const winnerNorms=winners.map(normText);
+  const t=normText(team);
+  const slotWinner=(b[key]||[])[slotIndex]||'';
+  const pairs=realRoundPairs(real,key);
+  const pairWithTeam=pairs.find(pair=>(pair||[]).some(x=>normText(x)===t));
+  const pairIndex=pairs.findIndex(pair=>(pair||[]).some(x=>normText(x)===t));
+  const winnerInOwnRealMatch=pairIndex>=0 ? ((b[key]||[])[pairIndex]||'') : '';
+  if(t && winnerNorms.includes(t)){
+    return {ok:true,confirmed:true,pending:false,real:team,passedElsewhere:(slotWinner && normText(slotWinner)!==t),eliminated:false};
+  }
+  if(winnerInOwnRealMatch && normText(winnerInOwnRealMatch)!==t){
+    return {ok:false,confirmed:true,pending:false,real:winnerInOwnRealMatch,passedElsewhere:false,eliminated:true};
+  }
+  if(slotWinner){
+    return {ok:false,confirmed:true,pending:false,real:slotWinner,passedElsewhere:false,eliminated:false};
+  }
+  return {ok:false,confirmed:false,pending:true,real:'',passedElsewhere:false,eliminated:false};
+}
 function bracketWinnersBreakdown(p,real){
   const labels={dieciseisavos:'Dieciseisavos',octavos:'Octavos',cuartos:'Cuartos',semis:'Semifinales',final:'Final'};
   let rows=[],total=0;
@@ -434,12 +469,10 @@ function bracketWinnersBreakdown(p,real){
     if(!rb.some(Boolean))return;
     pb.forEach((team,i)=>{
       if(!team)return;
-      const realWinner=rb[i]||'';
-      const confirmed=!!realWinner;
-      const ok=confirmed && normText(team)===normText(realWinner);
-      const got=ok?pts:0;
+      const out=roundOutcomeForTeam(team,real,key,i);
+      const got=out.ok?pts:0;
       total+=got;
-      rows.push({round:labels[key]||key,slot:i+1,team,real:realWinner||'Pendiente',pts:got,possible:pts,ok,confirmed});
+      rows.push({round:labels[key]||key,slot:i+1,team,real:out.real||'Pendiente',pts:got,possible:pts,ok:out.ok,confirmed:out.confirmed,pending:out.pending,passedElsewhere:out.passedElsewhere});
     });
   });
   return {rows,total};
@@ -470,18 +503,13 @@ function extrasBreakdown(p,real){
 
 function roundAuditSummary(p,real,key,expected,pts){
   const pb=Array.from({length:expected},(_,i)=>(p.pred?.bracket?.[key]||[])[i]||'');
-  const rb=Array.from({length:expected},(_,i)=>(real.bracket?.[key]||[])[i]||'');
   let got=0, ok=0, fail=0, pending=0, played=0;
   pb.forEach((team,i)=>{
     if(!team)return;
-    const realWinner=rb[i]||'';
-    if(realWinner){
-      played++;
-      if(normText(team)===normText(realWinner)){got+=pts; ok++;}
-      else{fail++;}
-    }else{
-      pending++;
-    }
+    const out=roundOutcomeForTeam(team,real||{},key,i);
+    if(out.ok){got+=pts; ok++; played++;}
+    else if(out.confirmed){fail++; played++;}
+    else{pending++;}
   });
   return {got,ok,fail,pending,possible:expected*pts,played};
 }
@@ -537,9 +565,9 @@ function renderDesglose(){
   let eb=extrasBreakdown(p,real);
   let expectedByRound={Dieciseisavos:16,Octavos:8,Cuartos:4,Semifinales:2,Final:1};
   let keyByRound={Dieciseisavos:'dieciseisavos',Octavos:'octavos',Cuartos:'cuartos',Semifinales:'semis',Final:'final'};
-  let bracketRows=bb.rows.length?`<table class="table"><thead><tr><th>Ronda</th><th>Tu equipo</th><th>Equipo real</th><th>Puntos</th><th>Estado</th></tr></thead><tbody>${bb.rows.map(r=>{let key=keyByRound[r.round]||'';let expected=expectedByRound[r.round]||0;let realTeam=r.confirmed?escapeHtml(r.real):'<span class="audit-pending">Pendiente</span>';return `<tr><td>${escapeHtml(r.round)} ${r.slot}</td><td>${escapeHtml(r.team)}</td><td>${realTeam}</td><td>${bracketStatusIcon(r,real,key,expected)} <span class="mini">/ ${r.possible}</span></td><td>${bracketStatusText(r,real,key,expected)}</td></tr>`}).join('')}</tbody></table>`:'<p class="muted">Aún no hay ganadores confirmados en el cuadro final.</p>';
+  let bracketRows=bb.rows.length?`<table class="table"><thead><tr><th>Ronda</th><th>Tu equipo</th><th>Equipo real</th><th>Puntos</th><th>Estado</th></tr></thead><tbody>${bb.rows.map(r=>{let key=keyByRound[r.round]||'';let expected=expectedByRound[r.round]||0;let realTeam=r.confirmed?escapeHtml(r.real):'<span class="audit-pending">Pendiente</span>';let moved=r.passedElsewhere?' <span class="mini">(pasó en otro cruce)</span>':'';return `<tr><td>${escapeHtml(r.round)} ${r.slot}</td><td>${escapeHtml(r.team)}</td><td>${realTeam}${moved}</td><td>${bracketStatusIcon(r,real,key,expected)} <span class="mini">/ ${r.possible}</span></td><td>${bracketStatusText(r,real,key,expected)}</td></tr>`}).join('')}</tbody></table>`:'<p class="muted">Aún no hay ganadores confirmados en el cuadro final.</p>';
   let extrasRows=eb.rows.length?`<table class="table"><thead><tr><th>Extra</th><th>Tu apuesta</th><th>Real</th><th>Puntos</th><th>Estado</th></tr></thead><tbody>${eb.rows.map(r=>`<tr><td>${escapeHtml(r.label)}</td><td>${escapeHtml(r.pred)}</td><td>${escapeHtml(r.real)}</td><td>${r.pts?('✅ <b>'+r.pts+'</b>'):'0'} <span class="mini">/ ${r.possible}</span></td><td>${r.status==='Pendiente'?'<span class="audit-pending">Pendiente</span>':(r.ok?'<span class="audit-ok">Acertado</span>':'<span class="audit-no">'+escapeHtml(r.status)+'</span>')}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">Sin extras configurados.</p>';
-  $('desgloseBox').innerHTML=`<h3>Auditoría global</h3>${globalAuditHtml(players,real)}<hr style="margin:22px 0;border:0;border-top:1px solid #e5e7eb"><h3>Detalle por jugador: ${escapeHtml(p.name||'Jugador')}</h3><div class="grid"><div class="card"><h3>Total</h3><p style="font-size:26px;margin:4px 0"><b>${score.total}</b></p></div><div class="card"><h3>Partidos</h3><p style="font-size:22px;margin:4px 0"><b>${score.partidos}</b></p></div><div class="card"><h3>Grupos</h3><p style="font-size:22px;margin:4px 0"><b>${score.grupos}</b></p><p class="mini">Posiciones: ${gb.total} · Clasificados: ${qb.groupPts}</p></div><div class="card"><h3>Cuadro</h3><p style="font-size:22px;margin:4px 0"><b>${score.cuadro}</b></p><p class="mini">Cruces exactos: ${qb.cuadroPts} · Ganadores: ${bb.total}</p></div><div class="card"><h3>Extras</h3><p style="font-size:22px;margin:4px 0"><b>${score.extras}</b></p><p class="mini">Puntos auditados: ${eb.total}</p></div></div><div class="notice" style="margin:12px 0"><b>Dieciseisavos:</b> se suman +2 solo si el equipo cae en el mismo cruce/slot exacto del cuadro que tenía el jugador. Si lo tenía clasificado pero en otro cruce, suma +1 de clasificado pero 0 en cuadro. Los 1º y 2º cuentan al cerrar su grupo. ${thirdsNote}</div><h3>Partidos jugados</h3><table class="table"><thead><tr><th>Fecha</th><th>Grupo</th><th>Resultado real</th><th>Su porra</th><th>Puntos</th></tr></thead><tbody>${matchRows||'<tr><td colspan="5">Sin partidos puntuados todavía.</td></tr>'}</tbody></table><h3 style="margin-top:16px">Puntos por posiciones de grupo</h3><div class="grid">${groupHtml}</div><h3 style="margin-top:16px">Clasificados y dieciseisavos confirmados</h3>${qualHtml}<h3 style="margin-top:16px">Ganadores del cuadro final</h3><p class="mini">Aquí se auditan los puntos de dieciseisavos, octavos, cuartos, semifinales y final según los ganadores reales que se vayan confirmando.</p>${bracketRows}<h3 style="margin-top:16px">Extras</h3><p class="mini">Los extras se quedan pendientes hasta que la categoría esté decidida oficialmente.</p>${extrasRows}`;
+  $('desgloseBox').innerHTML=`<h3>Auditoría global</h3>${globalAuditHtml(players,real)}<hr style="margin:22px 0;border:0;border-top:1px solid #e5e7eb"><h3>Detalle por jugador: ${escapeHtml(p.name||'Jugador')}</h3><div class="grid"><div class="card"><h3>Total</h3><p style="font-size:26px;margin:4px 0"><b>${score.total}</b></p></div><div class="card"><h3>Partidos</h3><p style="font-size:22px;margin:4px 0"><b>${score.partidos}</b></p></div><div class="card"><h3>Grupos</h3><p style="font-size:22px;margin:4px 0"><b>${score.grupos}</b></p><p class="mini">Posiciones: ${gb.total} · Clasificados: ${qb.groupPts}</p></div><div class="card"><h3>Cuadro</h3><p style="font-size:22px;margin:4px 0"><b>${score.cuadro}</b></p><p class="mini">Cruces exactos: ${qb.cuadroPts} · Ganadores: ${bb.total}</p></div><div class="card"><h3>Extras</h3><p style="font-size:22px;margin:4px 0"><b>${score.extras}</b></p><p class="mini">Puntos auditados: ${eb.total}</p></div></div><div class="notice" style="margin:12px 0"><b>Dieciseisavos:</b> los +2 de cruce exacto se mantienen para la clasificación a 16avos. Los +4 de ganadores del cuadro se suman si el equipo pasa de ronda, aunque haya llegado por otro cruce. Los 1º y 2º cuentan al cerrar su grupo. ${thirdsNote}</div><h3>Partidos jugados</h3><table class="table"><thead><tr><th>Fecha</th><th>Grupo</th><th>Resultado real</th><th>Su porra</th><th>Puntos</th></tr></thead><tbody>${matchRows||'<tr><td colspan="5">Sin partidos puntuados todavía.</td></tr>'}</tbody></table><h3 style="margin-top:16px">Puntos por posiciones de grupo</h3><div class="grid">${groupHtml}</div><h3 style="margin-top:16px">Clasificados y dieciseisavos confirmados</h3>${qualHtml}<h3 style="margin-top:16px">Ganadores del cuadro final</h3><p class="mini">Aquí se auditan los puntos de dieciseisavos, octavos, cuartos, semifinales y final según los ganadores reales que se vayan confirmando.</p>${bracketRows}<h3 style="margin-top:16px">Extras</h3><p class="mini">Los extras se quedan pendientes hasta que la categoría esté decidida oficialmente.</p>${extrasRows}`;
 }
 
 
