@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - v5.1.2 Reglas extras</title>
+<title>Porra Mundial 2026 - v5.3.5 Zoom por rondas</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -40,7 +40,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.4 · FIFA Style · Auditoría Global · cierre 11/06 21:00</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.5 · FIFA Style · Zoom por rondas · cierre 11/06 21:00</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -95,7 +95,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
   <section id="cuadro_final" class="section"><div class="card"><h3>🏆 Cuadro oficial del Mundial</h3><p class="muted">Sigue el cuadro real de eliminatorias: dieciseisavos, octavos, cuartos, semifinales y final. Los ganadores avanzan automáticamente cuando el administrador actualiza el cuadro.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td colspan="2"><b>⭐ Extras</b></td></tr><tr><td>🏆 Campeón del Mundo</td><td><b>20</b></td></tr><tr><td>🥈 Subcampeón</td><td><b>10</b></td></tr><tr><td>⚽ Pichichi del Mundial</td><td><b>10</b></td></tr><tr><td>⭐ Mejor jugador del Mundial</td><td><b>10</b></td></tr><tr><td>🧤 Mejor portero del Mundial</td><td><b>10</b></td></tr><tr><td>🌍 Equipo más goleado del Mundial</td><td><b>6</b></td></tr><tr><td>📉 Equipo más goleado en la primera fase</td><td><b>6</b><br><span class="mini">Se puntúa al finalizar la fase de grupos.</span></td></tr><tr><td>🇪🇸 Fase alcanzada por España</td><td><b>6</b><br><span class="mini">Máximo: Final. Si España gana o pierde la final, cuenta como Final.</span></td></tr><tr><td>🇪🇸 Pichichi de España</td><td><b>6</b></td></tr><tr><td colspan="2"><span class="mini"><b>Importante:</b> los extras se puntúan únicamente cuando la categoría queda decidida oficialmente.</span></td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v5.3.4 Cuadro Oficial · Cierre 11/06 21:00</div>
+<div class="footer">Porra Mundial 2026 · v5.3.5 Zoom por rondas · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -188,7 +188,7 @@ const teams=Object.values(groups).flat();
 const extras=[['campeon','Campeón',20],['subcampeon','Subcampeón',12],['pichichi','Pichichi',12],['mejor_jugador','Mejor jugador',10],['mejor_portero','Mejor portero',8],['mas_goleador','Equipo más goleador',8],['mas_goleado_primera_fase','Equipo más goleado en la primera fase',8],['fase_espana','Fase alcanzada por España',8],['pichichi_espana','Pichichi de España',6]];
 const rounds=[['dieciseisavos','Ganadores de dieciseisavos',16,4],['octavos','Ganadores de octavos',8,6],['cuartos','Ganadores de cuartos',4,8],['semis','Finalistas',2,12],['final','Campeón',1,20]];
 const koSchedule={
-  // Horarios en España peninsular (CEST). Dieciseisavos corregidos según calendario oficial publicado.
+  // Horarios oficiales en España peninsular (CEST) según el cuadro FIFA/Mundial 2026.
   M73:'28/06 · 21:00',  // 2A - 2B
   M74:'29/06 · 22:30',  // 1E - 3º A/B/C/D/F
   M75:'30/06 · 03:00',  // 1F - 2C
@@ -205,10 +205,22 @@ const koSchedule={
   M86:'04/07 · 00:00',  // 1J - 2H
   M87:'04/07 · 03:30',  // 1K - 3º D/E/I/J/L
   M88:'03/07 · 20:00',  // 2D - 2G
-  M89:'04/07 · 19:00',M90:'04/07 · 23:00',M91:'05/07 · 22:00',M92:'06/07 · 02:00',
-  M93:'Horario pendiente',M94:'Horario pendiente',M95:'Horario pendiente',M96:'Horario pendiente',
-  M97:'09/07 · 21:00',M98:'10/07 · 21:00',M99:'11/07 · 21:00',M100:'12/07 · 21:00',
-  M101:'14/07 · 21:00',M102:'15/07 · 21:00',M103:'18/07 · 21:00',M104:'19/07 · 21:00'
+  M89:'04/07 · 23:00',  // Paraguay - Francia
+  M90:'04/07 · 19:00',  // Canadá - Marruecos
+  M91:'05/07 · 22:00',  // Brasil - Noruega
+  M92:'06/07 · 02:00',  // México - Inglaterra
+  M93:'06/07 · 21:00',  // Portugal/Croacia - España
+  M94:'07/07 · 02:00',  // Estados Unidos - Bélgica
+  M95:'07/07 · 18:00',  // Argentina/Cabo Verde - Australia/Egipto
+  M96:'07/07 · 22:00',  // Suiza/Argelia - Colombia/Ghana
+  M97:'09/07 · 22:00',
+  M98:'10/07 · 21:00',
+  M99:'11/07 · 23:00',
+  M100:'12/07 · 03:00',
+  M101:'14/07 · 21:00',
+  M102:'15/07 · 21:00',
+  M103:'18/07 · 23:00',
+  M104:'19/07 · 21:00'
 };
 function koDate(code){return koSchedule[code]||'Horario pendiente'}
 
@@ -523,14 +535,27 @@ function globalAuditHtml(players,real){
   if(!players.length)return '';
   const scored=players.map(p=>({p,score:scorePlayer(p,real||{}),gb:groupPointsBreakdown(p,real||{}),qb:qualifierPointsBreakdown(p,real||{}),bb:bracketWinnersBreakdown(p,real||{}),eb:extrasBreakdown(p,real||{})})).sort((a,b)=>b.score.total-a.score.total);
   const totals=`<div class="card"><h3>📊 Auditoría global de puntos</h3><p class="mini">Vista rápida de todos los jugadores sin cambiar el filtro. Sirve para comprobar partidos, grupos, cuadro y extras de un vistazo.</p><div class="table-scroll"><table class="table"><thead><tr><th>Pos.</th><th>Jugador</th><th>Total</th><th>Partidos</th><th>Grupos</th><th>Cuadro</th><th>Extras</th></tr></thead><tbody>${scored.map((x,i)=>`<tr><td>${i+1}</td><td><b>${escapeHtml(x.p.name||'Jugador')}</b></td><td><b>${x.score.total}</b></td><td>${x.score.partidos}</td><td>${x.score.grupos}</td><td>${x.score.cuadro}</td><td>${x.score.extras}</td></tr>`).join('')}</tbody></table></div></div>`;
-  const rondaDefs=[['dieciseisavos','16avos',16,4],['octavos','Octavos',8,6],['cuartos','Cuartos',4,8],['semis','Semis',2,12],['final','Final',1,20]];
-  const cuadro=`<div class="card"><h3>🏆 Auditoría global del cuadro</h3><p class="mini">✅ aciertos, ❌ fallos confirmados y ⏳ pendientes de jugar. Los puntos son los ganadores acertados en cada ronda.</p><div class="table-scroll"><table class="table"><thead><tr><th>Jugador</th>${rondaDefs.map(r=>`<th>${r[1]}</th>`).join('')}<th>Extras</th></tr></thead><tbody>${scored.map(x=>`<tr><td><b>${escapeHtml(x.p.name||'Jugador')}</b></td>${rondaDefs.map(([key,label,n,pts])=>`<td>${auditCell(roundAuditSummary(x.p,real||{},key,n,pts))}</td>`).join('')}<td><b>${x.eb.total}</b><br><span class="mini">auditado</span></td></tr>`).join('')}</tbody></table></div></div>`;
-  const dieciRows=scored.map(x=>{
-    let a=roundAuditSummary(x.p,real||{},'dieciseisavos',16,4);
-    return `<tr><td><b>${escapeHtml(x.p.name||'Jugador')}</b></td><td>${a.ok}</td><td>${a.fail}</td><td>${a.pending}</td><td><b>${a.got}</b> / ${a.possible}</td></tr>`;
-  }).join('');
-  const dieci=`<div class="card"><h3>🔎 Zoom dieciseisavos</h3><p class="mini">Resumen rápido de la primera ronda del cuadro.</p><table class="table"><thead><tr><th>Jugador</th><th>✅</th><th>❌</th><th>⏳</th><th>Puntos</th></tr></thead><tbody>${dieciRows}</tbody></table></div>`;
-  return `<div class="grid">${totals}${cuadro}</div>${dieci}`;
+  const rondaDefs=[
+    ['dieciseisavos','16avos','Dieciseisavos',16,4],
+    ['octavos','Octavos','Octavos',8,6],
+    ['cuartos','Cuartos','Cuartos',4,8],
+    ['semis','Semis','Semifinales',2,12],
+    ['final','Final','Final',1,20]
+  ];
+  const cuadro=`<div class="card"><h3>🏆 Auditoría global del cuadro</h3><p class="mini">✅ aciertos, ❌ fallos confirmados y ⏳ pendientes de jugar. Cada columna cuenta solo su ronda: dieciseisavos, octavos, cuartos, semifinales y final.</p><div class="table-scroll"><table class="table"><thead><tr><th>Jugador</th>${rondaDefs.map(r=>`<th>${r[1]}</th>`).join('')}<th>Extras</th></tr></thead><tbody>${scored.map(x=>`<tr><td><b>${escapeHtml(x.p.name||'Jugador')}</b></td>${rondaDefs.map(([key,label,full,n,pts])=>`<td>${auditCell(roundAuditSummary(x.p,real||{},key,n,pts))}</td>`).join('')}<td><b>${x.eb.total}</b><br><span class="mini">auditado</span></td></tr>`).join('')}</tbody></table></div></div>`;
+
+  function zoomRound(key,title,expected,pts,maxLabel){
+    const rows=scored.map(x=>({name:x.p.name||'Jugador',a:roundAuditSummary(x.p,real||{},key,expected,pts)}));
+    const ranked=[...rows].sort((x,y)=>y.a.got-x.a.got || y.a.ok-x.a.ok || x.a.fail-y.a.fail || x.name.localeCompare(y.name));
+    const best=ranked[0];
+    const hasAny=rows.some(r=>r.a.ok>0 || r.a.fail>0 || r.a.pending>0 || r.a.got>0);
+    const king=best && hasAny ? `<p class="mini"><b>👑 Rey de ${escapeHtml(title.toLowerCase())}:</b> ${escapeHtml(best.name)} (${best.a.got}/${best.a.possible})</p>` : '';
+    const body=ranked.map(r=>`<tr><td><b>${escapeHtml(r.name)}</b></td><td>${r.a.ok}</td><td>${r.a.fail}</td><td>${r.a.pending}</td><td><b>${r.a.got}</b> / ${r.a.possible}</td></tr>`).join('');
+    return `<div class="card"><h3>🔎 Zoom ${escapeHtml(title)}</h3><p class="mini">Resumen independiente de ${escapeHtml(title.toLowerCase())}. Máximo: ${maxLabel}.</p>${king}<div class="table-scroll"><table class="table"><thead><tr><th>Jugador</th><th>✅</th><th>❌</th><th>⏳</th><th>Puntos</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+  }
+
+  const zooms=rondaDefs.map(([key,label,full,n,pts])=>zoomRound(key,full,n,pts,`${n*pts} puntos`)).join('');
+  return `<div class="grid">${totals}${cuadro}</div>${zooms}`;
 }
 function bracketStatusIcon(row,real,key,expected){
   if(row.ok)return `✅ <b>${row.pts}</b>`;
