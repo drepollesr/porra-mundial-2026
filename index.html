@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Porra Mundial 2026 - v5.3.5 Zoom por rondas</title>
+<title>Porra Mundial 2026 - v5.4 Extras múltiples y alias</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#d9dee8;--brand:#0f766e;--brand2:#134e4a;--soft:#e6fffb;--warn:#fff7ed;--gold:#f59e0b;--good:#16a34a;--bad:#dc2626;--blue:#0b63ce}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef6ff 0,#f7f7fb 260px);color:var(--ink)}
@@ -40,7 +40,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 </head>
 <body>
-<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.3.5 · FIFA Style · Zoom por rondas · cierre 11/06 21:00</div></header>
+<header><h1>Porra Mundial 2026</h1><div class="sub">Versión online v5.4 · FIFA Style · Extras múltiples y alias · cierre 11/06 21:00</div></header>
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="inicio">Inicio</button>
@@ -95,7 +95,7 @@ header h1:after{content:"🏆";font-size:.62em;margin-left:10px;filter:drop-shad
   <section id="cuadro_final" class="section"><div class="card"><h3>🏆 Cuadro oficial del Mundial</h3><p class="muted">Sigue el cuadro real de eliminatorias: dieciseisavos, octavos, cuartos, semifinales y final. Los ganadores avanzan automáticamente cuando el administrador actualiza el cuadro.</p><div class="row"><button class="btn secondary" onclick="loadOnlineData()">Actualizar datos online</button><label>Ver cuadro:</label><select id="koViewerSelect" onchange="renderCuadroFinal()"></select></div><div id="cuadroFinalBox" style="margin-top:12px"></div></div></section>
   <section id="reglas" class="section"><div class="grid"><div class="card"><h3>Puntuación</h3><table class="table"><tbody><tr><td>Acertar signo 1/X/2</td><td>1</td></tr><tr><td>Marcador exacto</td><td>+2</td></tr><tr><td>Diferencia de goles</td><td>+1</td></tr><tr><td><b>Ejemplo: acertar México 2-0</b></td><td><b>4</b></td></tr><tr><td>Equipo clasificado a dieciseisavos</td><td>+1</td></tr><tr><td>Si aciertas su posición exacta en el grupo</td><td>+3</td></tr><tr><td>Si además cae en el cruce exacto de dieciseisavos</td><td>+2</td></tr><tr><td><b>Máximo por equipo en esta parte</b></td><td><b>6</b></td></tr><tr><td><b>Cuándo se suman dieciseisavos</b></td><td><b>1º y 2º al cerrar su grupo. Mejores terceros al finalizar todos los grupos.</b></td></tr><tr><td>Equipo en octavos</td><td>4</td></tr><tr><td>Equipo en cuartos</td><td>6</td></tr><tr><td>Equipo en semifinales</td><td>8</td></tr><tr><td>Finalista</td><td>12</td></tr><tr><td>Campeón</td><td>20</td></tr><tr><td colspan="2"><b>⭐ Extras</b></td></tr><tr><td>🏆 Campeón del Mundo</td><td><b>20</b></td></tr><tr><td>🥈 Subcampeón</td><td><b>10</b></td></tr><tr><td>⚽ Pichichi del Mundial</td><td><b>10</b></td></tr><tr><td>⭐ Mejor jugador del Mundial</td><td><b>10</b></td></tr><tr><td>🧤 Mejor portero del Mundial</td><td><b>10</b></td></tr><tr><td>🌍 Equipo más goleado del Mundial</td><td><b>6</b></td></tr><tr><td>📉 Equipo más goleado en la primera fase</td><td><b>6</b><br><span class="mini">Se puntúa al finalizar la fase de grupos.</span></td></tr><tr><td>🇪🇸 Fase alcanzada por España</td><td><b>6</b><br><span class="mini">Máximo: Final. Si España gana o pierde la final, cuenta como Final.</span></td></tr><tr><td>🇪🇸 Pichichi de España</td><td><b>6</b></td></tr><tr><td colspan="2"><span class="mini"><b>Importante:</b> los extras se puntúan únicamente cuando la categoría queda decidida oficialmente.</span></td></tr></tbody></table></div><div class="ok"><b>Automatización añadida</b><br>La clasificación se calcula a partir de los marcadores. Los puntos de grupos y el cruce exacto de dieciseisavos se explican jugador por jugador en la pestaña <b>Desglose puntos</b>.</div></div></section>
 </div>
-<div class="footer">Porra Mundial 2026 · v5.3.5 Zoom por rondas · Cierre 11/06 21:00</div>
+<div class="footer">Porra Mundial 2026 · v5.4 Extras múltiples y alias · Cierre 11/06 21:00</div>
 <script>
 const ADMIN_PASSWORD='mundial2026';
 const CUTOFF_ISO='2026-06-11T21:00:00+02:00';
@@ -186,6 +186,11 @@ L:['Inglaterra','Ghana','Panamá','Croacia']
 const pairings=[[0,1],[2,3],[0,2],[3,1],[3,0],[1,2]];
 const teams=Object.values(groups).flat();
 const extras=[['campeon','Campeón',20],['subcampeon','Subcampeón',12],['pichichi','Pichichi',12],['mejor_jugador','Mejor jugador',10],['mejor_portero','Mejor portero',8],['mas_goleador','Equipo más goleador',8],['mas_goleado_primera_fase','Equipo más goleado en la primera fase',8],['fase_espana','Fase alcanzada por España',8],['pichichi_espana','Pichichi de España',6]];
+const FINAL_EXTRA_DEFAULTS={
+  campeon:'España', subcampeon:'Argentina', pichichi:'Mbappe', mejor_jugador:'Rodri',
+  mejor_portero:'Unai Simón', mas_goleador:'Inglaterra, Francia',
+  mas_goleado_primera_fase:'Irak, Túnez', fase_espana:'Final', pichichi_espana:'Oyarzabal'
+};
 const rounds=[['dieciseisavos','Ganadores de dieciseisavos',16,4],['octavos','Ganadores de octavos',8,6],['cuartos','Ganadores de cuartos',4,8],['semis','Finalistas',2,12],['final','Campeón',1,20]];
 const koSchedule={
   // Horarios oficiales en España peninsular (CEST) según el cuadro FIFA/Mundial 2026.
@@ -371,27 +376,15 @@ function renderBracket(id,data,prefix,baseOptions,mode){
 }
 function optionsForRound(data,key,baseOptions){return []}
 function faseEspanaDisplay(v){return String(v||'')==='Campeón'?'Final':String(v||'')}
-function renderExtras(id,data,prefix,handler){$(id).innerHTML=extras.map(([key,label])=>{let autoReal=(id==='realExtras'&&key==='mas_goleado_primera_fase'),autoVal=autoReal?mostConcededTeam(getAdmin().real?.matches||{}):'';return `<div class="card"><h3>${label}</h3>${autoReal?`<input style="width:100%" class="${prefix}${key}" value="${escapeAttr(autoVal||'Pendiente')}" readonly><p class="mini">Se calculará automáticamente cuando termine toda la primera fase.</p>`:key==='fase_espana'?sel(['Grupos','Dieciseisavos','Octavos','Cuartos','Semifinales','Final'],faseEspanaDisplay(data[key]||''),`${prefix}${key}`,handler):`<input style="width:100%" class="${prefix}${key}" value="${escapeAttr(data[key]||'')}" onchange="${handler}" placeholder="Equipo o jugador">`}</div>`}).join('')}
-function getDraft(){try{return JSON.parse(localStorage.getItem('porra_player')||'{"pred":{}}')}catch{return {pred:{}}}}
-function saveDraft(){let pred={matches:{},bracket:{},extras:{}};matches.forEach(m=>{let h=$(`p_${m.id}_h`),a=$(`p_${m.id}_a`);if(h&&a&&(h.value!==''||a.value!==''))pred.matches[m.id]={h:num(h.value),a:num(a.value)}});rounds.forEach(([key,,n])=>pred.bracket[key]=Array.from({length:n},(_,i)=>document.querySelector(`.pb_${key}_${i}`)?.value||''));extras.forEach(([key])=>{let e=document.querySelector(`.pe_${key}`);pred.extras[key]=key==='fase_espana'?faseEspanaDisplay(e?e.value:''):(e?e.value:'')});localStorage.setItem('porra_player',JSON.stringify({name:$('playerName')?.value||'',pred}));renderPlayerAuto();let d=getDraft();renderBracket('playerBracket',d.pred?.bracket||{},'pb_',qualifiedFromMatches(d.pred?.matches||{}),'player')}
-function getAdmin(){try{return JSON.parse(localStorage.getItem('porra_admin')||'{"players":[],"real":{}}')}catch{return {players:[],real:{}}}}
-function saveAdmin(){let st=getAdmin();st.real=st.real||{};st.real.matches={};st.real.bracket={};st.real.extras={};matches.forEach(m=>{let h=$(`r_${m.id}_h`),a=$(`r_${m.id}_a`);if(h&&a&&(h.value!==''||a.value!==''))st.real.matches[m.id]={h:num(h.value),a:num(a.value)}});rounds.forEach(([key,,n])=>st.real.bracket[key]=Array.from({length:n},(_,i)=>document.querySelector(`.rb_${key}_${i}`)?.value||''));extras.forEach(([key])=>{let e=document.querySelector(`.re_${key}`);st.real.extras[key]=(key==='mas_goleado_primera_fase')?mostConcededTeam(st.real.matches):(key==='fase_espana'?faseEspanaDisplay(e?e.value:''):(e?e.value:''))});localStorage.setItem('porra_admin',JSON.stringify(st));renderAdminAuto();renderBracket('realBracket',st.real?.bracket||{},'rb_',qualifiedFromMatches(st.real?.matches||{}),'admin');renderRanking()}
-function num(v){if(v===''||v==null)return null;let n=Number(v);if(!Number.isInteger(n)||n<0||n>20)return null;return n}function outcome(o){if(o.h==null||o.a==null)return null;return o.h>o.a?'1':o.h<o.a?'2':'X'}function diff(o){return o.h-o.a}
-function hasAnyRealResult(real){return matches.some(m=>{let rr=real?.matches?.[m.id];return rr&&rr.h!=null&&rr.a!=null&&rr.h!==''&&rr.a!==''})}
-function normText(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function scorePlayer(p,real){
-  let s={partidos:0,grupos:0,cuadro:0,extras:0,total:0};
-  real=real||{};
-  let pm=p.pred?.matches||{}, rm=real.matches||{};
-  let pCalc=calcTables(pm), rCalc=calcTables(rm);
-  matches.forEach(m=>{let pr=pm[m.id],rr=rm[m.id];if(!pr||!rr||pr.h==null||pr.a==null||rr.h==null||rr.a==null)return;if(outcome(pr)===outcome(rr))s.partidos+=1;if(diff(pr)===diff(rr))s.partidos+=1;if(pr.h===rr.h&&pr.a===rr.a)s.partidos+=2});
-  Object.keys(groups).forEach(g=>{if(!groupMatchesComplete(rm,g)||!groupMatchesComplete(pm,g))return;let pg=pCalc.byGroup[g].map(r=>r.team),rg=rCalc.byGroup[g].map(r=>r.team);pg.forEach((team,i)=>{if(team===rg[i])s.grupos+=3})});
-  let qb=qualifierPointsBreakdown(p,real);
-  s.grupos+=qb.groupPts;
-  s.cuadro+=qb.cuadroPts;
-  rounds.forEach(([key,,n,pts])=>{let pb=(p.pred?.bracket?.[key]||[]).filter(Boolean),rb=(real.bracket?.[key]||[]).filter(Boolean);if(!rb.length)return;pb.forEach(x=>{if(rb.includes(x))s.cuadro+=pts})});
-  extras.forEach(([key,,pts])=>{let a=normText(p.pred?.extras?.[key]||''),b=normText(real.extras?.[key]||'');if(!a||!b)return;if(key==='mas_goleado_primera_fase'){if(!allGroupMatchesComplete(real.matches||{}))return;let winners=b.split(',').map(x=>normText(x));if(winners.includes(a))s.extras+=pts}else if(key==='fase_espana'){if(normText(faseEspanaDisplay(p.pred?.extras?.[key]||''))===normText(faseEspanaDisplay(real.extras?.[key]||'')))s.extras+=pts}else if(a===b)s.extras+=pts});
-  s.total=s.partidos+s.grupos+s.cuadro+s.extras;return s
+function renderExtras(id,data,prefix,handler){
+  const isReal=id==='realExtras';
+  $(id).innerHTML=extras.map(([key,label])=>{
+    let value=data[key]||'';
+    if(isReal && !value) value=FINAL_EXTRA_DEFAULTS[key]||'';
+    if(key==='fase_espana') return `<div class="card"><h3>${label}</h3>${sel(['Grupos','Dieciseisavos','Octavos','Cuartos','Semifinales','Final'],faseEspanaDisplay(value),`${prefix}${key}`,handler)}</div>`;
+    const multipleHint=isReal && (key==='mas_goleador'||key==='mas_goleado_primera_fase') ? `<p class="mini">Puedes poner varios ganadores separados por comas, “y” o “/”.</p>`:'';
+    return `<div class="card"><h3>${label}</h3><input style="width:100%" class="${prefix}${key}" value="${escapeAttr(value)}" onchange="${handler}" placeholder="Equipo o jugador">${multipleHint}</div>`;
+  }).join('')
 }
 function scoreSingleMatch(pr,rr){
   if(!pr||!rr||pr.h==null||pr.a==null||rr.h==null||rr.a==null)return 0;
@@ -492,22 +485,12 @@ function bracketWinnersBreakdown(p,real){
 function extrasBreakdown(p,real){
   let rows=[],total=0;
   extras.forEach(([key,label,pts])=>{
-    let pred=p.pred?.extras?.[key]||'';
-    let realVal=(key==='mas_goleado_primera_fase' && real.matches && allGroupMatchesComplete(real.matches))?mostConcededTeam(real.matches):(real.extras?.[key]||'');
-    let a=normText(pred),b=normText(realVal);
-    let status='Pendiente',got=0,ok=false;
-    if(!a){status='Sin apuesta'}
-    else if(!b){status='Pendiente'}
-    else if(key==='mas_goleado_primera_fase'){
-      let winners=b.split(',').map(x=>normText(x));
-      ok=winners.includes(a); got=ok?pts:0; status=ok?'Acertado':'Fallado';
-    }else if(key==='fase_espana'){
-      ok=normText(faseEspanaDisplay(pred))===normText(faseEspanaDisplay(realVal)); got=ok?pts:0; status=ok?'Acertado':'Fallado';
-    }else{
-      ok=a===b; got=ok?pts:0; status=ok?'Acertado':'Fallado';
-    }
-    total+=got;
-    rows.push({label,pred:pred||'-',real:realVal||'Pendiente',pts:got,possible:pts,status,ok});
+    let pred=p.pred?.extras?.[key]||'',realVal=real.extras?.[key]||'',status='Pendiente',got=0,ok=false;
+    if(!pred)status='Sin apuesta';
+    else if(!realVal)status='Pendiente';
+    else if(key==='fase_espana'){ok=canonicalExtraValue(faseEspanaDisplay(pred))===canonicalExtraValue(faseEspanaDisplay(realVal));got=ok?pts:0;status=ok?'Acertado':'Fallado'}
+    else{ok=extraMatches(pred,realVal);got=ok?pts:0;status=ok?'Acertado':'Fallado'}
+    total+=got;rows.push({label,pred:pred||'-',real:realVal||'Pendiente',pts:got,possible:pts,status,ok});
   });
   return {rows,total};
 }
