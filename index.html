@@ -386,6 +386,77 @@ function renderExtras(id,data,prefix,handler){
     return `<div class="card"><h3>${label}</h3><input style="width:100%" class="${prefix}${key}" value="${escapeAttr(value)}" onchange="${handler}" placeholder="Equipo o jugador">${multipleHint}</div>`;
   }).join('')
 }
+
+function getDraft(){try{return JSON.parse(localStorage.getItem('porra_player')||'{"pred":{}}')}catch{return {pred:{}}}}
+function saveDraft(){
+  let pred={matches:{},bracket:{},extras:{}};
+  matches.forEach(m=>{let h=$(`p_${m.id}_h`),a=$(`p_${m.id}_a`);if(h&&a&&(h.value!==''||a.value!==''))pred.matches[m.id]={h:num(h.value),a:num(a.value)}});
+  rounds.forEach(([key,,n])=>pred.bracket[key]=Array.from({length:n},(_,i)=>document.querySelector(`.pb_${key}_${i}`)?.value||''));
+  extras.forEach(([key])=>{let e=document.querySelector(`.pe_${key}`);pred.extras[key]=key==='fase_espana'?faseEspanaDisplay(e?e.value:''):(e?e.value:'')});
+  localStorage.setItem('porra_player',JSON.stringify({name:$('playerName')?.value||'',pred}));
+  renderPlayerAuto();let d=getDraft();renderBracket('playerBracket',d.pred?.bracket||{},'pb_',qualifiedFromMatches(d.pred?.matches||{}),'player')
+}
+function getAdmin(){try{return JSON.parse(localStorage.getItem('porra_admin')||'{"players":[],"real":{}}')}catch{return {players:[],real:{}}}}
+function saveAdmin(){
+  let st=getAdmin();st.real=st.real||{};st.real.matches={};st.real.bracket={};st.real.extras={};
+  matches.forEach(m=>{let h=$(`r_${m.id}_h`),a=$(`r_${m.id}_a`);if(h&&a&&(h.value!==''||a.value!==''))st.real.matches[m.id]={h:num(h.value),a:num(a.value)}});
+  rounds.forEach(([key,,n])=>st.real.bracket[key]=Array.from({length:n},(_,i)=>document.querySelector(`.rb_${key}_${i}`)?.value||''));
+  extras.forEach(([key])=>{let e=document.querySelector(`.re_${key}`);let value=e?e.value:'';st.real.extras[key]=key==='fase_espana'?faseEspanaDisplay(value):value});
+  localStorage.setItem('porra_admin',JSON.stringify(st));
+  renderAdminAuto();renderBracket('realBracket',st.real?.bracket||{},'rb_',qualifiedFromMatches(st.real?.matches||{}),'admin');renderRanking()
+}
+function num(v){if(v===''||v==null)return null;let n=Number(v);if(!Number.isInteger(n)||n<0||n>20)return null;return n}
+function outcome(o){if(o.h==null||o.a==null)return null;return o.h>o.a?'1':o.h<o.a?'2':'X'}
+function diff(o){return o.h-o.a}
+function hasAnyRealResult(real){return matches.some(m=>{let rr=real?.matches?.[m.id];return rr&&rr.h!=null&&rr.a!=null&&rr.h!==''&&rr.a!==''})}
+function normText(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
+const EXTRA_ALIASES={
+  'kylian mbappe':'mbappe','kylian mbappe lottin':'mbappe','mbappe':'mbappe',
+  'mikel oyarzabal':'oyarzabal','oyarzabal':'oyarzabal',
+  'rodri':'rodri','rodrigo hernandez':'rodri','rodrigo hernandez cascante':'rodri',
+  'unai':'unai simon','unai simon':'unai simon',
+  'lamine':'lamine yamal','lamine yamal':'lamine yamal',
+  'pedro gonzalez':'pedri','pedri':'pedri',
+  'inglaterra':'inglaterra','england':'inglaterra',
+  'francia':'francia','france':'francia',
+  'espana':'espana','spain':'espana',
+  'argentina':'argentina',
+  'irak':'irak','iraq':'irak',
+  'tunez':'tunez','tunisia':'tunez'
+};
+function canonicalExtraValue(v){let n=normText(v).replace(/[.]/g,'');return EXTRA_ALIASES[n]||n}
+function splitExtraValues(v){
+  return String(v||'')
+    .replace(/\s+o\s+/gi,',')
+    .replace(/\s+y\s+/gi,',')
+    .split(/[,;/|]+/)
+    .map(canonicalExtraValue)
+    .filter(Boolean)
+}
+function extraMatches(pred,realVal){
+  const p=canonicalExtraValue(pred);
+  if(!p)return false;
+  return splitExtraValues(realVal).includes(p)
+}
+function scorePlayer(p,real){
+  let s={partidos:0,grupos:0,cuadro:0,extras:0,total:0};
+  real=real||{};
+  let pm=p.pred?.matches||{},rm=real.matches||{};
+  let pCalc=calcTables(pm),rCalc=calcTables(rm);
+  matches.forEach(m=>{let pr=pm[m.id],rr=rm[m.id];if(!pr||!rr||pr.h==null||pr.a==null||rr.h==null||rr.a==null)return;if(outcome(pr)===outcome(rr))s.partidos+=1;if(diff(pr)===diff(rr))s.partidos+=1;if(pr.h===rr.h&&pr.a===rr.a)s.partidos+=2});
+  Object.keys(groups).forEach(g=>{if(!groupMatchesComplete(rm,g)||!groupMatchesComplete(pm,g))return;let pg=pCalc.byGroup[g].map(r=>r.team),rg=rCalc.byGroup[g].map(r=>r.team);pg.forEach((team,i)=>{if(team===rg[i])s.grupos+=3})});
+  let qb=qualifierPointsBreakdown(p,real);s.grupos+=qb.groupPts;s.cuadro+=qb.cuadroPts;
+  rounds.forEach(([key,,n,pts])=>{let pb=(p.pred?.bracket?.[key]||[]).filter(Boolean),rb=(real.bracket?.[key]||[]).filter(Boolean);if(!rb.length)return;pb.forEach(x=>{if(rb.some(y=>normText(y)===normText(x)))s.cuadro+=pts})});
+  extras.forEach(([key,,pts])=>{
+    let pred=p.pred?.extras?.[key]||'',realVal=real.extras?.[key]||'';
+    if(!pred||!realVal)return;
+    if(key==='fase_espana'){
+      if(canonicalExtraValue(faseEspanaDisplay(pred))===canonicalExtraValue(faseEspanaDisplay(realVal)))s.extras+=pts;
+    }else if(extraMatches(pred,realVal))s.extras+=pts;
+  });
+  s.total=s.partidos+s.grupos+s.cuadro+s.extras;return s
+}
+
 function scoreSingleMatch(pr,rr){
   if(!pr||!rr||pr.h==null||pr.a==null||rr.h==null||rr.a==null)return 0;
   let pts=0;
